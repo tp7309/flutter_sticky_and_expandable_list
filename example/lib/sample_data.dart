@@ -1,4 +1,4 @@
-import 'package:sticky_and_expandable_list/expandable_list.dart';
+import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
 class MockData {
   static List<Section> getExampleSections() {

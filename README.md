@@ -2,7 +2,7 @@
 
 Flutter implementation of sticky headers and expandable list, support use it in a CustomScrollView.
 
-![Screenshot](https://raw.githubusercontent.com/tp7309/flutter_sticky_and_expandable_list)/master/doc/images/sliverlist.gif)
+![Screenshot](https://raw.githubusercontent.com/tp7309/flutter_sticky_and_expandable_list/master/doc/images/sliverlist.gif)
 
 ## Features
 
@@ -39,7 +39,7 @@ dependencies:
     );
 ```
 
-[Detail Examples](https://github.com/tp7309/flutter_sticky_and_expandable_list/example)
+[Detail Examples](https://github.com/tp7309/flutter_sticky_and_expandable_list/tree/master/example)
 
 ## FAQ
 
@@ -49,7 +49,7 @@ dependencies:
 section.setSectionExpanded(true)
 ```
 
-[Example](https://github.com/tp7309/flutter_sticky_and_expandable_list/example/example_listview.dart)
+[Example](https://github.com/tp7309/flutter_sticky_and_expandable_list/tree/master/example/example_listview.dart)
 
 ### How to listen current sticky header or the sticky header scroll offset?
 

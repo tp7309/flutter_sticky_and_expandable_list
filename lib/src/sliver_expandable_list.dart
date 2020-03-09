@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../expandable_list.dart';
+import '../sticky_and_expandable_list.dart';
 
 typedef ExpandableHeaderBuilder<S> = Widget Function(
     BuildContext context, S section, int index);

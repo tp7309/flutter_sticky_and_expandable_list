@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:sticky_and_expandable_list/expandable_list.dart';
+import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
 ///wrap expandable list section(header content).
 class ExpandableListItemContainer extends MultiChildRenderObjectWidget {
