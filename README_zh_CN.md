@@ -1,6 +1,8 @@
-# flutter_sticky_and_expandable_list
+# sticky_and_expandable_list
 
 可拆叠列表的 Flutter 实现，支持固定组标题，可以与 Sliver 家族控件配合使用。
+
+[![Pub](https://img.shields.io/pub/v/sticky_and_expandable_list.svg)](https://pub.dartlang.org/packages/sticky_and_expandable_list)
 
 ![Screenshot](https://raw.githubusercontent.com/tp7309/flutter_sticky_and_expandable_list/master/doc/images/sliverlist.gif)
 
@@ -47,7 +49,7 @@ dependencies:
 section.setSectionExpanded(true)
 ```
 
-[示例](https://github.com/tp7309/flutter_sticky_and_expandable_list/tree/master/example/example_listview.dart)
+[Example](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_listview.dart)
 
 ### 如何监听当前粘性头部的滚动偏移量？如何得知哪个 Header 是粘性头部？
 

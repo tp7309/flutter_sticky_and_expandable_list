@@ -180,6 +180,7 @@ abstract class ExpandableListSection<T> {
   List<T> getItems();
 }
 
+///controller for listen sticky header offset and current sticky header index.
 class ExpandableListHeaderController extends ChangeNotifier {
   double _percent = 1.0;
   int _switchingSectionIndex = -1;
@@ -217,6 +218,8 @@ class ExpandableListHeaderController extends ChangeNotifier {
   }
 }
 
+///wrap header widget, when controller is set, the widget will rebuild
+///when sticky header offset changed.ExpandableListHeaderController
 class ExpandableAnimableHeader extends StatefulWidget {
   ///build section header
   final WidgetBuilder builder;
