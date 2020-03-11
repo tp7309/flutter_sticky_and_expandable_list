@@ -1,6 +1,8 @@
 # flutter_sticky_and_expandable_list
+Flutter implementation of sticky headers and expandable list.Support use it in a CustomScrollView.
 
 README i18n:[中文说明](https://raw.githubusercontent.com/tp7309/flutter_sticky_and_expandable_list/master/README_zh_CN.md)
+
 ![Screenshot](https://raw.githubusercontent.com/tp7309/flutter_sticky_and_expandable_list/master/doc/images/sliverlist.gif)
 
 ## Features
@@ -12,7 +14,6 @@ README i18n:[中文说明](https://raw.githubusercontent.com/tp7309/flutter_stic
 
 ## Getting Started
 
-**Waiting Upload!!!**
 In the `pubspec.yaml` of your flutter project, add the following dependency:
 
 ```yaml

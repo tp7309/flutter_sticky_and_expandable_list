@@ -12,7 +12,6 @@
 
 ## 开始
 
-**Waiting Upload!!!**
 在 Flutter 项目中的 `pubspec.yaml` 文件中添加如下依赖。
 
 ```yaml
