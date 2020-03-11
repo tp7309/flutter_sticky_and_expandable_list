@@ -1,6 +1,6 @@
-import 'package:example/example_animable_header.dart';
-import 'package:example/example_listview.dart';
-import 'package:example/example_sliver.dart';
+import 'example_listview.dart';
+import 'example_sliver.dart';
+import 'example_animable_header.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());

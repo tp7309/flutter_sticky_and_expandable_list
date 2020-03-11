@@ -3,7 +3,7 @@ import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 class MockData {
   static List<Section> getExampleSections() {
     var sections = List<Section>();
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 20; i++) {
       var section = Section()
         ..expanded = true
         ..header = "Header #$i"
