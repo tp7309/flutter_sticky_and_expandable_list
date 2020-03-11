@@ -1,3 +1,3 @@
 # example
 
-flutter_sticky_and_expandable_list example project.
+sticky_and_expandable_list example project, find examples on github.

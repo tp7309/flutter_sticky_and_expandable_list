@@ -18,3 +18,4 @@ doc/api/
 .idea/
 .DS_Store
 .vscode/
+.history/
