@@ -27,10 +27,11 @@ dependencies:
 
 ```dart
     //sectionList is a custom data source for ExpandableListView.
-    //echo section model must implement ExpandableListSection.
-    var sectionList = MockData.getExampleSections();
+    //echo Section class must implement ExpandableListSection.
+    List<Section> sectionList = MockData.getExampleSections();
     return ExpandableListView(
       builder: SliverExpandableChildDelegate<String, Section>(
+          sectionList: sectionList,
           headerBuilder: (context, section, index) => Text("Header #$index"),
           itemBuilder: (context, section, item, index) => ListTile(
                 leading: CircleAvatar(

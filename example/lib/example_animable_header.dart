@@ -18,8 +18,6 @@ class _ExampleAnimableHeaderState extends State<ExampleAnimableHeader> {
     return Scaffold(
         appBar: AppBar(title: Text("Amimable Header Example")),
         body: ExpandableListView(
-          //检查ListView需不需要停止监听Scrollable
-          // RenderStickyHeaderLayoutBuilder get renderObject => super.renderObject;
           builder: SliverExpandableChildDelegate<String, Section>(
               sectionList: sectionList,
               headerBuilder: (context, section, index) {

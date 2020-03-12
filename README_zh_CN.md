@@ -26,9 +26,10 @@ dependencies:
 ```dart
     //sectionList是ExpandableListView的数据源，需要使用者自己定义。
     //每个Section类实现ExpandableListSection接口即可。
-    var sectionList = MockData.getExampleSections();
+    List<Section> sectionList = MockData.getExampleSections();
     return ExpandableListView(
       builder: SliverExpandableChildDelegate<String, Section>(
+          sectionList: sectionList,
           headerBuilder: (context, section, index) => Text("Header #$index"),
           itemBuilder: (context, section, item, index) => ListTile(
                 leading: CircleAvatar(
