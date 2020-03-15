@@ -1,9 +1,20 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'example_animable_header.dart';
 import 'example_listview.dart';
 import 'example_sliver.dart';
-import 'example_animable_header.dart';
-import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+  if (Platform.isAndroid) {
+    //set statusBar color
+    var overlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.blue);
+    SystemChrome.setSystemUIOverlayStyle(overlayStyle);
+  }
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

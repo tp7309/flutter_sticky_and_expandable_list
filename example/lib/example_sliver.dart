@@ -1,6 +1,7 @@
-import 'sample_data.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
+
+import 'sample_data.dart';
 
 class ExampleSliver extends StatefulWidget {
   @override
@@ -12,30 +13,32 @@ class _ExampleSliverState extends State<ExampleSliver> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            pinned: true,
-            floating: true,
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: true,
+              floating: true,
             expandedHeight: 200,
             flexibleSpace: FlexibleSpaceBar(
               title: Text("Sliver Example"),
             ),
-          ),
-          SliverExpandableList(
-            builder: SliverExpandableChildDelegate<String, Section>(
-              sectionList: sectionList,
-              headerBuilder: _buildHeader,
-              itemBuilder: (context, section, item, index) => ListTile(
-                leading: CircleAvatar(
-                  child: Text("$index"),
+            ),
+            SliverExpandableList(
+              builder: SliverExpandableChildDelegate<String, Section>(
+                sectionList: sectionList,
+                headerBuilder: _buildHeader,
+                itemBuilder: (context, section, item, index) => ListTile(
+                  leading: CircleAvatar(
+                    child: Text("$index"),
+                  ),
+                  title: Text(item),
                 ),
-                title: Text(item),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
