@@ -27,10 +27,10 @@ dependencies:
 
 ```dart
     //sectionList is a custom data source for ExpandableListView.
-    //echo Section class must implement ExpandableListSection.
-    List<Section> sectionList = MockData.getExampleSections();
+    //echo ExampleSection class must implement ExpandableListSection.
+    List<ExampleSection> sectionList = MockData.getExampleSections();
     return ExpandableListView(
-      builder: SliverExpandableChildDelegate<String, Section>(
+      builder: SliverExpandableChildDelegate<String, ExampleSection>(
           sectionList: sectionList,
           headerBuilder: (context, section, index) => Text("Header #$index"),
           itemBuilder: (context, section, item, index) => ListTile(
@@ -60,7 +60,7 @@ section.setSectionExpanded(true)
   @override
   Widget build(BuildContext context) {
     ExpandableListView(
-      builder: SliverExpandableChildDelegate<String, Section>(
+      builder: SliverExpandableChildDelegate<String, ExampleSection>(
         headerController: _getHeaderController(),
       ),
     )

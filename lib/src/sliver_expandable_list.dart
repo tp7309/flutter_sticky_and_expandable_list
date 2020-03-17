@@ -165,7 +165,9 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
     sectionRealIndexes.add(0);
     int realIndex = 0;
     for (int i = 0; i < calcLength; i++) {
-      realIndex += 1 + sectionList[i].getItems()?.length ?? 0;
+      S section = sectionList[i];
+      assert(section != null);
+      realIndex += 1 + section.getItems()?.length ?? 0;
       sectionRealIndexes.add(realIndex);
     }
     return sectionRealIndexes;
@@ -190,8 +192,10 @@ class ExpandableListHeaderController extends ChangeNotifier {
 
   double get percent => _percent;
 
+  ///get floating header index
   int get switchingSectionIndex => _switchingSectionIndex;
 
+  ///get pinned header index
   int get stickySectionIndex => _stickySectionIndex;
 
   updatePercent(int sectionIndex, double percent) {

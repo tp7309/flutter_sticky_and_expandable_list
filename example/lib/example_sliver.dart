@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
-import 'sample_data.dart';
+import 'mock_data.dart';
 
 class ExampleSliver extends StatefulWidget {
   @override
@@ -20,13 +20,13 @@ class _ExampleSliverState extends State<ExampleSliver> {
             SliverAppBar(
               pinned: true,
               floating: true,
-            expandedHeight: 200,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text("Sliver Example"),
-            ),
+              expandedHeight: 200,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text("Sliver Example"),
+              ),
             ),
             SliverExpandableList(
-              builder: SliverExpandableChildDelegate<String, Section>(
+              builder: SliverExpandableChildDelegate<String, ExampleSection>(
                 sectionList: sectionList,
                 headerBuilder: _buildHeader,
                 itemBuilder: (context, section, item, index) => ListTile(
@@ -43,7 +43,7 @@ class _ExampleSliverState extends State<ExampleSliver> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, Section section, int index) {
+  Widget _buildHeader(BuildContext context, ExampleSection section, int index) {
     return InkWell(
         child: Container(
             color: Colors.lightBlue,

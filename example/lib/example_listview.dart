@@ -1,4 +1,4 @@
-import 'package:example/sample_data.dart';
+import 'package:example/mock_data.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
@@ -15,7 +15,7 @@ class _ExampleListViewState extends State<ExampleListView> {
     return Scaffold(
         appBar: AppBar(title: Text("ListView Example")),
         body: ExpandableListView(
-          builder: SliverExpandableChildDelegate<String, Section>(
+          builder: SliverExpandableChildDelegate<String, ExampleSection>(
               sectionList: sectionList,
               headerBuilder: _buildHeader,
               itemBuilder: (context, section, item, index) => ListTile(
@@ -27,7 +27,7 @@ class _ExampleListViewState extends State<ExampleListView> {
         ));
   }
 
-  Widget _buildHeader(BuildContext context, Section section, int index) {
+  Widget _buildHeader(BuildContext context, ExampleSection section, int index) {
     return InkWell(
         child: Container(
             color: Colors.lightBlue,
