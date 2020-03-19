@@ -35,7 +35,7 @@ class _ExampleListViewState extends State<ExampleListView> {
             padding: EdgeInsets.only(left: 20),
             alignment: Alignment.centerLeft,
             child: Text(
-              section.header,
+              "Header #$index",
               style: TextStyle(color: Colors.white),
             )),
         onTap: () {

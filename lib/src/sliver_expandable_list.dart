@@ -73,6 +73,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           S section = sectionList[index];
           List<T> items = section.getItems();
           int sectionIndex = sectionRealIndexes[index];
+          int headerIndex = sectionIndex;
           return ExpandableListItemContainer(
             separated: false,
             listIndex: index,
@@ -81,7 +82,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
             headerController: headerController,
             header: ExpandableAnimableHeader(
               builder: (context) =>
-                  headerBuilder(context, section, sectionIndex),
+                  headerBuilder(context, section, headerIndex),
               controller: headerController,
             ),
             content: !section.isSectionExpanded() || items == null
@@ -112,6 +113,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
                 _computeSemanticChildCount(items?.length ?? 0);
             //user list instead of list generator for compatible with Dart versions below 2.3.0.
             var semanticList = List.generate(sectionChildCount, (i) => i);
+            int headerIndex = sectionIndex;
             itemView = ExpandableListItemContainer(
               separated: true,
               listIndex: index,
@@ -120,7 +122,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
               headerController: headerController,
               header: ExpandableAnimableHeader(
                 builder: (context) =>
-                    headerBuilder(context, section, sectionIndex),
+                    headerBuilder(context, section, headerIndex),
                 controller: headerController,
               ),
 //              header: headerBuilder(context, section, sectionIndex++),
