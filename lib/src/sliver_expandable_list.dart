@@ -11,6 +11,8 @@ typedef ExpandableItemBuilder = Widget Function(
     BuildContext context, int sectionIndex, int itemIndex, int index);
 typedef ExpandableSeparatorBuilder = Widget Function(
     BuildContext context, bool isSectionSeparator, int index);
+typedef ExpandableSectionBuilder = Widget Function(
+    BuildContext context, ExpandableSectionContainerInfo containerInfo);
 
 /// A scrollable list of widgets arranged linearly, support expand/collapse item and
 /// sticky header.
@@ -48,6 +50,10 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///store section real index in SliverList, format: [sectionList index, SliverList index].
   final List<int> sectionRealIndexes;
 
+  ///use this return a custom content widget, when use this builder, headerBuilder
+  ///is invalid.
+  ExpandableSectionBuilder sectionBuilder;
+
   ///expandable list controller, listen sticky header index scroll offset etc.
   ExpandableListController controller;
 
@@ -55,16 +61,19 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   SliverChildBuilderDelegate delegate;
 
   SliverExpandableChildDelegate(
-      {this.sectionList,
-      this.headerBuilder,
+      {@required this.sectionList,
+      @required this.itemBuilder,
       this.controller,
-      this.itemBuilder,
       this.separatorBuilder,
+      this.headerBuilder,
+      this.sectionBuilder,
       this.sticky = true,
       bool addAutomaticKeepAlives = true,
       bool addRepaintBoundaries = true,
       bool addSemanticIndexes = true})
       : assert(sectionList != null),
+        //only use one builder
+        assert(headerBuilder == null || sectionBuilder == null),
         sectionRealIndexes = _buildSectionRealIndexes(sectionList) {
     if (controller == null) {
       controller = ExpandableListController();
@@ -77,26 +86,37 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           int sectionRealIndex = sectionRealIndexes[sectionIndex];
           int itemRealIndex = sectionRealIndex;
 
-          var header = headerBuilder(context, sectionIndex, sectionRealIndex);
           //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
-          var children = (!section.isSectionExpanded() ||
-                  section.getItems() == null)
+          var children = (section.getItems() == null)
               ? <Widget>[]
               : List.generate(
                   section.getItems().length,
                   (i) =>
                       itemBuilder(context, sectionIndex, i, ++itemRealIndex));
-          return ExpandableSectionContainer(
+          var containerInfo = ExpandableSectionContainerInfo(
             separated: false,
             listIndex: index,
+            sectionIndex: sectionIndex,
             sectionRealIndexes: sectionRealIndexes,
             sticky: sticky,
             controller: controller,
-            header: header,
+            header: null,
+            children: children,
             content: Column(
               children: children,
             ),
           );
+          Widget container = sectionBuilder != null
+              ? sectionBuilder(context, containerInfo)
+              : null;
+          if (container == null) {
+            containerInfo.header =
+                headerBuilder(context, sectionIndex, sectionRealIndex);
+            container = ExpandableSectionContainer(
+              info: containerInfo,
+            );
+          }
+          return container;
         },
         childCount: sectionList.length,
         addAutomaticKeepAlives: addAutomaticKeepAlives,
@@ -115,10 +135,8 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
                 _computeSemanticChildCount(section.getItems()?.length ?? 0);
             int itemRealIndex = sectionRealIndex;
 
-            var header = headerBuilder(context, sectionIndex, sectionRealIndex);
             //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
-            var children = (!section.isSectionExpanded() ||
-                    section.getItems() == null)
+            var children = (section.getItems() == null)
                 ? <Widget>[]
                 : List.generate(
                     sectionChildCount,
@@ -126,17 +144,31 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
                         ? itemBuilder(
                             context, sectionIndex, i ~/ 2, ++itemRealIndex)
                         : separatorBuilder(context, false, itemRealIndex - 1));
-            itemView = ExpandableSectionContainer(
+
+            var containerInfo = ExpandableSectionContainerInfo(
               separated: true,
               listIndex: index,
+              sectionIndex: sectionIndex,
               sectionRealIndexes: sectionRealIndexes,
               sticky: sticky,
               controller: controller,
-              header: header,
+              header: null,
+              children: children,
               content: Column(
                 children: children,
               ),
             );
+            Widget container = sectionBuilder != null
+                ? sectionBuilder(context, containerInfo)
+                : null;
+            if (container == null) {
+              containerInfo.header =
+                  headerBuilder(context, sectionIndex, sectionRealIndex);
+              container = ExpandableSectionContainer(
+                info: containerInfo,
+              );
+            }
+            return container;
           } else {
             itemView = separatorBuilder(context, true,
                 sectionIndex + (section.getItems()?.length ?? 0));

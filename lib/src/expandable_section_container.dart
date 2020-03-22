@@ -9,25 +9,65 @@ import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 ///You can return a custom [ExpandableSectionContainer]
 ///by [SliverExpandableChildDelegate.sectionBuilder], but only
 ///[header] and [content] field could be changed.
-class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
-  final Widget header;
-  final Widget content;
+///
+
+class ExpandableSectionContainerInfo {
+  Widget header;
+  Widget content;
+  final List<Widget> children;
   final int listIndex;
   final List<int> sectionRealIndexes;
   final bool separated;
 
   final ExpandableListController controller;
+  final int sectionIndex;
   final bool sticky;
 
+  ExpandableSectionContainerInfo(
+      {this.header,
+      this.content,
+      this.children,
+      this.listIndex,
+      this.sectionRealIndexes,
+      this.separated,
+      this.controller,
+      this.sectionIndex,
+      this.sticky});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ExpandableSectionContainerInfo &&
+          runtimeType == other.runtimeType &&
+          header == other.header &&
+          content == other.content &&
+          children == other.children &&
+          listIndex == other.listIndex &&
+          sectionRealIndexes == other.sectionRealIndexes &&
+          separated == other.separated &&
+          controller == other.controller &&
+          sectionIndex == other.sectionIndex &&
+          sticky == other.sticky;
+
+  @override
+  int get hashCode =>
+      header.hashCode ^
+      content.hashCode ^
+      children.hashCode ^
+      listIndex.hashCode ^
+      sectionRealIndexes.hashCode ^
+      separated.hashCode ^
+      controller.hashCode ^
+      sectionIndex.hashCode ^
+      sticky.hashCode;
+}
+
+class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
+  final ExpandableSectionContainerInfo info;
+
   ExpandableSectionContainer({
-    @required this.header,
-    @required this.content,
-    @required this.listIndex,
-    @required this.sectionRealIndexes,
-    @required this.separated,
-    this.sticky = true,
-    this.controller,
-  }) : super(children: [content, header]);
+    @required this.info,
+  }) : super(children: [info.content, info.header]);
 
   @override
   RenderExpandableSectionContainer createRenderObject(BuildContext context) {
@@ -36,11 +76,11 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
     return RenderExpandableSectionContainer(
       renderSliver: renderSliver,
       scrollable: Scrollable.of(context),
-      headerController: this.controller,
-      sticky: this.sticky,
-      listIndex: this.listIndex,
-      sectionRealIndexes: this.sectionRealIndexes,
-      separated: this.separated,
+      headerController: this.info.controller,
+      sticky: this.info.sticky,
+      listIndex: this.info.listIndex,
+      sectionRealIndexes: this.info.sectionRealIndexes,
+      separated: this.info.separated,
     );
   }
 
@@ -49,11 +89,11 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
       BuildContext context, RenderExpandableSectionContainer renderObject) {
     renderObject
       ..scrollable = Scrollable.of(context)
-      ..controller = this.controller
-      ..sticky = this.sticky
-      ..listIndex = this.listIndex
-      ..sectionRealIndexes = this.sectionRealIndexes
-      ..separated = this.separated;
+      ..controller = this.info.controller
+      ..sticky = this.info.sticky
+      ..listIndex = this.info.listIndex
+      ..sectionRealIndexes = this.info.sectionRealIndexes
+      ..separated = this.info.separated;
   }
 }
 

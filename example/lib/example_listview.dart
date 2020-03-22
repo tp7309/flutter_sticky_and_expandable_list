@@ -45,8 +45,8 @@ class _ExampleListViewState extends State<ExampleListView> {
         onTap: () {
           //toggle section expand state
           setState(() {
-            section.setSectionExpanded(
-                !section.isSectionExpanded());
+            section.setSectionExpanded(!section.isSectionExpanded());
+
           });
         });
   }

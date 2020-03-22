@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:example/example_custom_section_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,6 +44,8 @@ class _HomePage extends StatelessWidget {
           _Item("Sliver Example", (context) => ExampleSliver()),
           _Item(
               "Amimable Header Example", (context) => ExampleAnimableHeader()),
+          _Item("CustomSectionAnimation Example",
+              (context) => ExampleCustomSectionAnimation()),
         ],
       ),
     );

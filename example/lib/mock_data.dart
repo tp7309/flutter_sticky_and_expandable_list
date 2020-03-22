@@ -1,15 +1,14 @@
-import 'package:flutter/widgets.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
 class MockData {
-  static List<ExampleSection> getExampleSections() {
+  static List<ExampleSection> getExampleSections(
+      [sectionSize = 10, itemSize = 5]) {
     var sections = List<ExampleSection>();
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < sectionSize; i++) {
       var section = ExampleSection()
         ..header = "Header #$i"
-        ..items = List.generate(5, (index) => "List tile #$index")
-        ..expanded = true
-        ..sectionIndex = i;
+        ..items = List.generate(itemSize, (index) => "List tile #$index")
+        ..expanded = true;
       sections.add(section);
     }
     return sections;
@@ -22,31 +21,9 @@ class ExampleSection implements ExpandableListSection<String> {
 
   //optional
   String header;
-  int sectionIndex;
 
   @override
   List<String> getItems() {
-    return items;
-  }
-
-  @override
-  bool isSectionExpanded() {
-    return expanded;
-  }
-
-  @override
-  void setSectionExpanded(bool expanded) {
-    this.expanded = expanded;
-  }
-}
-
-class Section implements ExpandableListSection<Widget> {
-  bool expanded;
-  String header;
-  List<Widget> items;
-
-  @override
-  List<Widget> getItems() {
     return items;
   }
 
