@@ -17,56 +17,72 @@ class _ExampleAnimableHeaderState extends State<ExampleAnimableHeader> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text("Amimable Header Example")),
-        body: ExpandableListView(
-          builder: SliverExpandableChildDelegate<String, ExampleSection>(
-              sectionList: sectionList,
-              headerBuilder: (context, sectionIndex, index) {
-                var section = sectionList[sectionIndex];
-                return ExpandableAutoLayoutWidget(
-                  trigger: ExpandableAutoLayoutTriggerDefault(_controller),
-                  builder: (context) {
-                    print("autoLayout");
-                    double opacity =
-                        _controller.stickySectionIndex == sectionIndex
-                            ? (1 - _controller.percent)
-                            : 1;
-                    return _Header(section: section, opacity: opacity);
-                  },
-                );
-              },
-              controller: _controller,
-              itemBuilder: (context, sectionIndex, itemIndex, index) {
-                String item = sectionList[sectionIndex].items[itemIndex];
-                return ListTile(
-                  leading: CircleAvatar(
-                    child: Text("$index"),
-                  ),
-                  title: Text(item),
-                );
-              }),
-        ));
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
-}
-
-class _Header extends StatelessWidget {
-  final ExampleSection section;
-  final double opacity;
-
-  _Header({this.section, this.opacity = 1.0});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.lightBlue.withOpacity(opacity),
-        height: 48,
-        padding: EdgeInsets.only(left: 20),
-        alignment: Alignment.centerLeft,
-        child: Text(
-          section.header,
-          style: TextStyle(color: Colors.white),
-        ));
+    return Scaffold(
+      appBar: AppBar(title: Text("Amimable Header Example")),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+              child: Container(
+            height: 100,
+            width: 100,
+            color: Colors.red,
+            alignment: Alignment.center,
+            child: Text(
+              "Sliver",
+              style: TextStyle(color: Colors.white),
+            ),
+          )),
+          SliverExpandableList(
+            builder: SliverExpandableChildDelegate<String, ExampleSection>(
+                sectionList: sectionList,
+                headerBuilder: _buildHeader,
+                controller: _controller,
+                itemBuilder: (context, sectionIndex, itemIndex, index) {
+                  String item = sectionList[sectionIndex].items[itemIndex];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      child: Text("$index"),
+                    ),
+                    title: Text(item),
+                  );
+                }),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, int sectionIndex, int index) {
+    var section = sectionList[sectionIndex];
+    return ExpandableAutoLayoutWidget(
+      trigger: ExpandableDefaultAutoLayoutTrigger(_controller),
+      builder: (context) {
+        double opacity = _controller.switchingSectionIndex == sectionIndex
+            ? (1 - _controller.percent)
+            : 1;
+        String headerText = section.header;
+        if (_controller.switchingSectionIndex == sectionIndex) {
+          headerText += " Switching";
+        } else if (_controller.stickySectionIndex == sectionIndex) {
+          headerText += " Pinned";
+        }
+        return Container(
+            color: Colors.lightBlue.withOpacity(opacity),
+            height: 48,
+            padding: EdgeInsets.only(left: 20),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              headerText,
+              style: TextStyle(color: Colors.white),
+            ));
+      },
+    );
   }
 }

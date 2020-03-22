@@ -211,7 +211,6 @@ class ExpandableListController extends ChangeNotifier {
     if (_percent == percent && _switchingSectionIndex == sectionIndex) {
       return;
     }
-//    print(toString());
     _switchingSectionIndex = sectionIndex;
     _percent = percent;
     notifyListeners();
@@ -231,7 +230,7 @@ class ExpandableListController extends ChangeNotifier {
 
   @override
   String toString() {
-    return 'ExpandableListHeaderController{_percent: $_percent, _switchingSectionIndex: $_switchingSectionIndex, _stickySectionIndex: $_stickySectionIndex}';
+    return 'ExpandableListController{_percent: $_percent, _switchingSectionIndex: $_switchingSectionIndex, _stickySectionIndex: $_stickySectionIndex}';
   }
 }
 
@@ -244,19 +243,23 @@ abstract class ExpandableAutoLayoutTrigger {
 
 ///default [ExpandableAutoLayoutTrigger] implementation, auto build when
 ///switch sticky header index.
-class ExpandableAutoLayoutTriggerDefault
+class ExpandableDefaultAutoLayoutTrigger
     implements ExpandableAutoLayoutTrigger {
-  ExpandableListController _controller;
-  double _percent = 0;
+  final ExpandableListController _controller;
 
-  ExpandableAutoLayoutTriggerDefault(this._controller) : super();
+  double _percent = 0;
+  int _stickyIndex = 0;
+
+  ExpandableDefaultAutoLayoutTrigger(this._controller) : super();
 
   @override
   bool needBuild() {
-    if (_percent == _controller.percent) {
+    if (_percent == _controller.percent &&
+        _stickyIndex == _controller.stickySectionIndex) {
       return false;
     }
     _percent = _controller.percent;
+    _stickyIndex = _controller.stickySectionIndex;
     return true;
   }
 
@@ -282,22 +285,30 @@ class ExpandableAutoLayoutWidget extends StatefulWidget {
 
 class _ExpandableAutoLayoutWidgetState
     extends State<ExpandableAutoLayoutWidget> {
-  ExpandableAutoLayoutTrigger buildTrigger;
-
   @override
   void initState() {
     super.initState();
     if (widget.trigger != null && widget.trigger.controller != null) {
-      widget.trigger.controller.addListener(() {
-        if (widget.trigger.needBuild()) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              setState(() {});
-            }
-          });
+      widget.trigger.controller.addListener(_onChange);
+    }
+  }
+
+  void _onChange() {
+    if (widget.trigger.needBuild()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {});
         }
       });
     }
+  }
+
+  @override
+  void dispose() {
+    if (widget.trigger != null && widget.trigger != null) {
+      widget.trigger.controller.removeListener(_onChange);
+    }
+    super.dispose();
   }
 
   @override

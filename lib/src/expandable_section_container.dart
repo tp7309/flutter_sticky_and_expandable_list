@@ -49,7 +49,7 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
       BuildContext context, RenderExpandableSectionContainer renderObject) {
     renderObject
       ..scrollable = Scrollable.of(context)
-      ..headerController = this.controller
+      ..controller = this.controller
       ..sticky = this.sticky
       ..listIndex = this.listIndex
       ..sectionRealIndexes = this.sectionRealIndexes
@@ -138,9 +138,9 @@ class RenderExpandableSectionContainer extends RenderBox
     }
   }
 
-  get headerController => _controller;
+  get controller => _controller;
 
-  set headerController(ExpandableListController value) {
+  set controller(ExpandableListController value) {
     if (_controller == value) {
       return;
     }
@@ -239,9 +239,7 @@ class RenderExpandableSectionContainer extends RenderBox
     //calc content offset
     positionChild(content, Offset(0, header.size.height));
 
-    //update stickyIndex
     double sliverListOffset = _getSliverListVisibleScrollOffset();
-//    print(sliverListOffset);
     if (_controller.containerOffsets.length <= _listIndex ||
         (_listIndex > 0 && _controller.containerOffsets[_listIndex] <= 0)) {
       _refreshContainerLayoutOffsets();
@@ -265,15 +263,19 @@ class RenderExpandableSectionContainer extends RenderBox
       if (_stickyIndex != _listIndex) {
         _stickyIndex = _listIndex;
         if (_controller != null) {
+          //ensure callback 100% percent.
+          _controller.updatePercent(_controller.switchingSectionIndex, 1);
+          //update sticky index
           _controller.stickySectionIndex = sectionIndex;
         }
       }
+    } else if (sliverListOffset <= 0) {
+      if (_controller != null) {
+        _controller.stickySectionIndex = -1;
+        _stickyIndex = -1;
+      }
     } else {
       _stickyIndex = -1;
-      if (_controller != null && _isSliverListOutside()) {
-        print("outside");
-        _controller.stickySectionIndex = -1;
-      }
     }
 
     //calc header offset
@@ -290,21 +292,16 @@ class RenderExpandableSectionContainer extends RenderBox
 
     //callback header hide percent
     if (_controller != null) {
-      if (currHeaderOffset >= headerMaxOffset) {
-        double switchingPercent = 0;
-        if (currHeaderOffset > height) {
-          //ensure callback 100% percent.
-          switchingPercent = 1;
-        } else {
-          switchingPercent =
-              (currHeaderOffset - headerMaxOffset) / header.size.height;
-        }
+      if (currHeaderOffset >= headerMaxOffset && currHeaderOffset <= height) {
+        double switchingPercent =
+            (currHeaderOffset - headerMaxOffset) / header.size.height;
         _controller.updatePercent(sectionIndex, switchingPercent);
-      } else if (sliverListOffset < minScrollOffset + content.size.height) {
+      } else if (sliverListOffset < minScrollOffset + content.size.height &&
+          _controller.switchingSectionIndex == sectionIndex) {
         //ensure callback 0% percent.
-        if (_controller.stickySectionIndex == sectionIndex) {
-          _controller.updatePercent(sectionIndex, 0);
-        }
+        _controller.updatePercent(sectionIndex, 0);
+        //reset switchingSectionIndex
+        _controller.updatePercent(-1, 1);
       }
     }
   }
@@ -316,11 +313,6 @@ class RenderExpandableSectionContainer extends RenderBox
   double _getSliverListVisibleScrollOffset() {
     return _renderSliver.constraints.overlap +
         _renderSliver.constraints.scrollOffset;
-  }
-
-  bool _isSliverListOutside() {
-    return _renderSliver.constraints.remainingPaintExtent <
-        _renderSliver.constraints.viewportMainAxisExtent;
   }
 
   void _refreshContainerLayoutOffsets() {
