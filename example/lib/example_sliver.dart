@@ -29,12 +29,15 @@ class _ExampleSliverState extends State<ExampleSliver> {
               builder: SliverExpandableChildDelegate<String, ExampleSection>(
                 sectionList: sectionList,
                 headerBuilder: _buildHeader,
-                itemBuilder: (context, section, item, index) => ListTile(
-                  leading: CircleAvatar(
-                    child: Text("$index"),
-                  ),
-                  title: Text(item),
-                ),
+                itemBuilder: (context, sectionIndex, itemIndex, index) {
+                  String item = sectionList[sectionIndex].items[itemIndex];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      child: Text("$index"),
+                    ),
+                    title: Text(item),
+                  );
+                },
               ),
             ),
           ],
@@ -43,7 +46,8 @@ class _ExampleSliverState extends State<ExampleSliver> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, ExampleSection section, int index) {
+  Widget _buildHeader(BuildContext context, int sectionIndex, int index) {
+    ExampleSection section = sectionList[sectionIndex];
     return InkWell(
         child: Container(
             color: Colors.lightBlue,

@@ -5,12 +5,12 @@ import 'package:flutter/widgets.dart';
 
 import '../sticky_and_expandable_list.dart';
 
-typedef ExpandableHeaderBuilder<S> = Widget Function(
-    BuildContext context, S section, int index);
-typedef ExpandableItemBuilder<T, S> = Widget Function(
-    BuildContext context, S section, T item, int index);
-typedef ExpandableSeparatorBuilder<T, S> = Widget Function(
-    BuildContext context, bool isHeaderSeparator, int index);
+typedef ExpandableHeaderBuilder = Widget Function(
+    BuildContext context, int sectionIndex, int index);
+typedef ExpandableItemBuilder = Widget Function(
+    BuildContext context, int sectionIndex, int itemIndex, int index);
+typedef ExpandableSeparatorBuilder = Widget Function(
+    BuildContext context, bool isSectionSeparator, int index);
 
 /// A scrollable list of widgets arranged linearly, support expand/collapse item and
 /// sticky header.
@@ -30,20 +30,16 @@ class SliverExpandableList extends SliverList {
 /// a builder callback.
 class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///data source
-  final List<S> sectionList;
+  final List sectionList;
 
   ///build section header
-  final ExpandableHeaderBuilder<S> headerBuilder;
-
-//  ///build animable header
-//  final ExpandableAnimableHeader header;
-  ///listen sticky header hide percent, [0.0-0.1].
-  final ExpandableListHeaderController headerController;
+  final ExpandableHeaderBuilder headerBuilder;
 
   ///build section item
-  final ExpandableItemBuilder<T, S> itemBuilder;
+  final ExpandableItemBuilder itemBuilder;
 
-  ///build header and item separator
+  ///build header and item separator, if pass null, SliverList has no separators.
+  ///default null.
   final ExpandableSeparatorBuilder separatorBuilder;
 
   ///whether to sticky the header.
@@ -52,13 +48,16 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///store section real index in SliverList, format: [sectionList index, SliverList index].
   final List<int> sectionRealIndexes;
 
+  ///expandable list controller, listen sticky header index scroll offset etc.
+  ExpandableListController controller;
+
   ///sliver list builder
   SliverChildBuilderDelegate delegate;
 
   SliverExpandableChildDelegate(
       {this.sectionList,
       this.headerBuilder,
-      this.headerController,
+      this.controller,
       this.itemBuilder,
       this.separatorBuilder,
       this.sticky = true,
@@ -67,32 +66,36 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
       bool addSemanticIndexes = true})
       : assert(sectionList != null),
         sectionRealIndexes = _buildSectionRealIndexes(sectionList) {
+    if (controller == null) {
+      controller = ExpandableListController();
+    }
     if (separatorBuilder == null) {
       delegate = SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          S section = sectionList[index];
-          List<T> items = section.getItems();
-          int sectionIndex = sectionRealIndexes[index];
-          int headerIndex = sectionIndex;
-          return ExpandableListItemContainer(
+          int sectionIndex = index;
+          S section = sectionList[sectionIndex];
+          int sectionRealIndex = sectionRealIndexes[sectionIndex];
+          int itemRealIndex = sectionRealIndex;
+
+          var header = headerBuilder(context, sectionIndex, sectionRealIndex);
+          //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
+          var children = (!section.isSectionExpanded() ||
+                  section.getItems() == null)
+              ? <Widget>[]
+              : List.generate(
+                  section.getItems().length,
+                  (i) =>
+                      itemBuilder(context, sectionIndex, i, ++itemRealIndex));
+          return ExpandableSectionContainer(
             separated: false,
             listIndex: index,
             sectionRealIndexes: sectionRealIndexes,
             sticky: sticky,
-            headerController: headerController,
-            header: ExpandableAnimableHeader(
-              builder: (context) =>
-                  headerBuilder(context, section, headerIndex),
-              controller: headerController,
+            controller: controller,
+            header: header,
+            content: Column(
+              children: children,
             ),
-            content: !section.isSectionExpanded() || items == null
-                ? Container()
-                : Column(
-                    children: items
-                        .map((T item) =>
-                            itemBuilder(context, section, item, ++sectionIndex))
-                        .toList(),
-                  ),
           );
         },
         childCount: sectionList.length,
@@ -103,44 +106,40 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
     } else {
       delegate = SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          final int itemIndex = index ~/ 2;
+          final int sectionIndex = index ~/ 2;
           Widget itemView;
-          int sectionIndex = sectionRealIndexes[itemIndex];
-          S section = sectionList[itemIndex];
-          List<T> items = section.getItems();
+          S section = sectionList[sectionIndex];
+          int sectionRealIndex = sectionRealIndexes[sectionIndex];
           if (index.isEven) {
             int sectionChildCount =
-                _computeSemanticChildCount(items?.length ?? 0);
-            //user list instead of list generator for compatible with Dart versions below 2.3.0.
-            var semanticList = List.generate(sectionChildCount, (i) => i);
-            int headerIndex = sectionIndex;
-            itemView = ExpandableListItemContainer(
+                _computeSemanticChildCount(section.getItems()?.length ?? 0);
+            int itemRealIndex = sectionRealIndex;
+
+            var header = headerBuilder(context, sectionIndex, sectionRealIndex);
+            //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
+            var children = (!section.isSectionExpanded() ||
+                    section.getItems() == null)
+                ? <Widget>[]
+                : List.generate(
+                    sectionChildCount,
+                    (i) => i.isEven
+                        ? itemBuilder(
+                            context, sectionIndex, i ~/ 2, ++itemRealIndex)
+                        : separatorBuilder(context, false, itemRealIndex - 1));
+            itemView = ExpandableSectionContainer(
               separated: true,
               listIndex: index,
               sectionRealIndexes: sectionRealIndexes,
               sticky: sticky,
-              headerController: headerController,
-              header: ExpandableAnimableHeader(
-                builder: (context) =>
-                    headerBuilder(context, section, headerIndex),
-                controller: headerController,
+              controller: controller,
+              header: header,
+              content: Column(
+                children: children,
               ),
-//              header: headerBuilder(context, section, sectionIndex++),
-              content: !section.isSectionExpanded() || items == null
-                  ? Container()
-                  : Column(
-                      children: semanticList
-                          .map((i) => i.isEven
-                              ? itemBuilder(context, section, items[i ~/ 2],
-                                  ++sectionIndex)
-                              : separatorBuilder(
-                                  context, false, sectionIndex - 1))
-                          .toList(),
-                    ),
             );
           } else {
-            itemView = separatorBuilder(
-                context, true, sectionIndex + (items?.length ?? 0));
+            itemView = separatorBuilder(context, true,
+                sectionIndex + (section.getItems()?.length ?? 0));
           }
           return itemView;
         },
@@ -161,7 +160,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
 
   static List<int>
       _buildSectionRealIndexes<T, S extends ExpandableListSection<T>>(
-          List<S> sectionList) {
+          List sectionList) {
     int calcLength = sectionList?.length ?? 0 - 1;
     List<int> sectionRealIndexes = List<int>();
     sectionRealIndexes.add(0);
@@ -185,16 +184,24 @@ abstract class ExpandableListSection<T> {
 }
 
 ///controller for listen sticky header offset and current sticky header index.
-class ExpandableListHeaderController extends ChangeNotifier {
+class ExpandableListController extends ChangeNotifier {
+  ///switchingSection scroll percent, [0.1-1.0], 1.0 mean that the last sticky section
+  ///is completely hidden.
   double _percent = 1.0;
   int _switchingSectionIndex = -1;
   int _stickySectionIndex = -1;
 
-  ExpandableListHeaderController();
+  ExpandableListController();
+
+  ///internal
+  List<double> _containerOffsets = List<double>();
+
+  ///store [ExpandableSectionContainer] information. [SliverList index, layoutOffset].
+  ///don't modify it.
+  List<double> get containerOffsets => _containerOffsets;
 
   double get percent => _percent;
 
-  ///get floating header index
   int get switchingSectionIndex => _switchingSectionIndex;
 
   ///get pinned header index
@@ -215,7 +222,11 @@ class ExpandableListHeaderController extends ChangeNotifier {
       return;
     }
     _stickySectionIndex = value;
-//    notifyListeners();
+    notifyListeners();
+  }
+
+  void forceNotifyListeners() {
+    notifyListeners();
   }
 
   @override
@@ -224,33 +235,61 @@ class ExpandableListHeaderController extends ChangeNotifier {
   }
 }
 
+///check if need rebuild [ExpandableAutoLayoutWidget]
+abstract class ExpandableAutoLayoutTrigger {
+  ExpandableListController get controller;
+
+  bool needBuild();
+}
+
+///default [ExpandableAutoLayoutTrigger] implementation, auto build when
+///switch sticky header index.
+class ExpandableAutoLayoutTriggerDefault
+    implements ExpandableAutoLayoutTrigger {
+  ExpandableListController _controller;
+  double _percent = 0;
+
+  ExpandableAutoLayoutTriggerDefault(this._controller) : super();
+
+  @override
+  bool needBuild() {
+    if (_percent == _controller.percent) {
+      return false;
+    }
+    _percent = _controller.percent;
+    return true;
+  }
+
+  @override
+  ExpandableListController get controller => _controller;
+}
+
 ///wrap header widget, when controller is set, the widget will rebuild
-///when sticky header offset changed.ExpandableListHeaderController
-class ExpandableAnimableHeader extends StatefulWidget {
+///when sticky header offset changed.
+class ExpandableAutoLayoutWidget extends StatefulWidget {
+  ///listen sticky header hide percent, [0.0-0.1].
+  final ExpandableAutoLayoutTrigger trigger;
+
   ///build section header
   final WidgetBuilder builder;
 
-  ///listen sticky header hide percent, [0.0-0.1].
-  final ExpandableListHeaderController controller;
-
-  ExpandableAnimableHeader({this.builder, this.controller});
+  ExpandableAutoLayoutWidget({this.builder, this.trigger});
 
   @override
-  _ExpandableAnimableHeaderState createState() =>
-      _ExpandableAnimableHeaderState();
+  _ExpandableAutoLayoutWidgetState createState() =>
+      _ExpandableAutoLayoutWidgetState();
 }
 
-class _ExpandableAnimableHeaderState extends State<ExpandableAnimableHeader> {
-  double _percent;
+class _ExpandableAutoLayoutWidgetState
+    extends State<ExpandableAutoLayoutWidget> {
+  ExpandableAutoLayoutTrigger buildTrigger;
 
   @override
   void initState() {
     super.initState();
-    if (widget.controller != null) {
-      widget.controller.addListener(() {
-        var newValue = widget.controller.percent;
-        if (newValue != _percent) {
-          _percent = newValue;
+    if (widget.trigger != null && widget.trigger.controller != null) {
+      widget.trigger.controller.addListener(() {
+        if (widget.trigger.needBuild()) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
               setState(() {});

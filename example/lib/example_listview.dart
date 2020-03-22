@@ -18,16 +18,20 @@ class _ExampleListViewState extends State<ExampleListView> {
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
               sectionList: sectionList,
               headerBuilder: _buildHeader,
-              itemBuilder: (context, section, item, index) => ListTile(
-                    leading: CircleAvatar(
-                      child: Text("$index"),
-                    ),
-                    title: Text(item),
-                  )),
+              itemBuilder: (context, sectionIndex, itemIndex, index) {
+                String item = sectionList[sectionIndex].items[itemIndex];
+                return ListTile(
+                  leading: CircleAvatar(
+                    child: Text("$index"),
+                  ),
+                  title: Text(item),
+                );
+              }),
         ));
   }
 
-  Widget _buildHeader(BuildContext context, ExampleSection section, int index) {
+  Widget _buildHeader(BuildContext context, int sectionIndex, int index) {
+    ExampleSection section = sectionList[sectionIndex];
     return InkWell(
         child: Container(
             color: Colors.lightBlue,
@@ -35,13 +39,14 @@ class _ExampleListViewState extends State<ExampleListView> {
             padding: EdgeInsets.only(left: 20),
             alignment: Alignment.centerLeft,
             child: Text(
-              "Header #$index",
+              "Header #$sectionIndex",
               style: TextStyle(color: Colors.white),
             )),
         onTap: () {
           //toggle section expand state
           setState(() {
-            section.setSectionExpanded(!section.isSectionExpanded());
+            section.setSectionExpanded(
+                !section.isSectionExpanded());
           });
         });
   }

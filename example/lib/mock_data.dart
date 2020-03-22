@@ -7,7 +7,7 @@ class MockData {
     for (int i = 0; i < 10; i++) {
       var section = ExampleSection()
         ..header = "Header #$i"
-        ..items = List.generate(6, (index) => "List tile #$index")
+        ..items = List.generate(5, (index) => "List tile #$index")
         ..expanded = true
         ..sectionIndex = i;
       sections.add(section);

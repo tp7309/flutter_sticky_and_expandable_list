@@ -9,9 +9,7 @@ class ExampleAnimableHeader extends StatefulWidget {
 
 class _ExampleAnimableHeaderState extends State<ExampleAnimableHeader> {
   var sectionList = MockData.getExampleSections();
-
-  double _headerOpacity = 1;
-  int _swithingSectionIndex = -1;
+  var _controller = ExpandableListController();
 
   @override
   void initState() {
@@ -25,31 +23,31 @@ class _ExampleAnimableHeaderState extends State<ExampleAnimableHeader> {
         body: ExpandableListView(
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
               sectionList: sectionList,
-              headerBuilder: (context, section, index) {
-                if (_swithingSectionIndex == section.sectionIndex) {
-                  return _Header(section: section, opacity: _headerOpacity);
-                } else {
-                  return _Header(section: section);
-                }
+              headerBuilder: (context, sectionIndex, index) {
+                var section = sectionList[sectionIndex];
+                return ExpandableAutoLayoutWidget(
+                  trigger: ExpandableAutoLayoutTriggerDefault(_controller),
+                  builder: (context) {
+                    print("autoLayout");
+                    double opacity =
+                        _controller.stickySectionIndex == sectionIndex
+                            ? (1 - _controller.percent)
+                            : 1;
+                    return _Header(section: section, opacity: opacity);
+                  },
+                );
               },
-              headerController: _getHeaderController(),
-              itemBuilder: (context, section, item, index) => ListTile(
-                    leading: CircleAvatar(
-                      child: Text("$index"),
-                    ),
-                    title: Text(item),
-                  )),
+              controller: _controller,
+              itemBuilder: (context, sectionIndex, itemIndex, index) {
+                String item = sectionList[sectionIndex].items[itemIndex];
+                return ListTile(
+                  leading: CircleAvatar(
+                    child: Text("$index"),
+                  ),
+                  title: Text(item),
+                );
+              }),
         ));
-  }
-
-  _getHeaderController() {
-    var controller = ExpandableListHeaderController();
-    controller.addListener(() {
-//      print(controller);
-      _headerOpacity = 1 - controller.percent;
-      _swithingSectionIndex = controller.switchingSectionIndex;
-    });
-    return controller;
   }
 }
 

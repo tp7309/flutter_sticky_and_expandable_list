@@ -5,36 +5,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
-///wrap expandable list section(header content).
-class ExpandableListItemContainer extends MultiChildRenderObjectWidget {
+///Section widget that contains header and content widget.
+///You can return a custom [ExpandableSectionContainer]
+///by [SliverExpandableChildDelegate.sectionBuilder], but only
+///[header] and [content] field could be changed.
+class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
   final Widget header;
   final Widget content;
   final int listIndex;
   final List<int> sectionRealIndexes;
   final bool separated;
 
-  final ExpandableListHeaderController headerController;
+  final ExpandableListController controller;
   final bool sticky;
 
-  ExpandableListItemContainer({
+  ExpandableSectionContainer({
     @required this.header,
     @required this.content,
     @required this.listIndex,
     @required this.sectionRealIndexes,
     @required this.separated,
     this.sticky = true,
-    this.headerController,
+    this.controller,
   }) : super(children: [content, header]);
 
   @override
-  RenderExpandableListItemContainer createRenderObject(BuildContext context) {
+  RenderExpandableSectionContainer createRenderObject(BuildContext context) {
     var renderSliver =
         context.findAncestorRenderObjectOfType<RenderSliverList>();
-//    print("createRenderObject callback:$callback");
-    return RenderExpandableListItemContainer(
+    return RenderExpandableSectionContainer(
       renderSliver: renderSliver,
       scrollable: Scrollable.of(context),
-      headerController: this.headerController,
+      headerController: this.controller,
       sticky: this.sticky,
       listIndex: this.listIndex,
       sectionRealIndexes: this.sectionRealIndexes,
@@ -44,11 +46,10 @@ class ExpandableListItemContainer extends MultiChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderExpandableListItemContainer renderObject) {
-//    print("updateRenderObject callback:$callback");
+      BuildContext context, RenderExpandableSectionContainer renderObject) {
     renderObject
       ..scrollable = Scrollable.of(context)
-      ..headerController = this.headerController
+      ..headerController = this.controller
       ..sticky = this.sticky
       ..listIndex = this.listIndex
       ..sectionRealIndexes = this.sectionRealIndexes
@@ -56,20 +57,17 @@ class ExpandableListItemContainer extends MultiChildRenderObjectWidget {
   }
 }
 
-///render [ExpandableListItemContainer]
-class RenderExpandableListItemContainer extends RenderBox
+///render [ExpandableSectionContainer]
+class RenderExpandableSectionContainer extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
   bool _sticky;
   ScrollableState _scrollable;
-  ExpandableListHeaderController _headerController;
+  ExpandableListController _controller;
   RenderSliverList _renderSliver;
   int _listIndex;
   int _stickyIndex = -1;
-
-  ///store [ExpandableListItemContainer] [SliverList index, layoutOffset].
-  List<double> _containerOffsets = List<double>();
 
   ///[sectionIndex, section in SliverList index].
   List<int> _sectionRealIndexes;
@@ -77,9 +75,9 @@ class RenderExpandableListItemContainer extends RenderBox
   /// is SliverList has separator
   bool _separated;
 
-  RenderExpandableListItemContainer({
+  RenderExpandableSectionContainer({
     @required ScrollableState scrollable,
-    ExpandableListHeaderController headerController,
+    ExpandableListController headerController,
     sticky = true,
     int listIndex = -1,
     List<int> sectionRealIndexes = const [],
@@ -88,7 +86,7 @@ class RenderExpandableListItemContainer extends RenderBox
     RenderBox content,
     RenderSliverList renderSliver,
   })  : _scrollable = scrollable,
-        _headerController = headerController,
+        _controller = headerController,
         _sticky = sticky,
         _listIndex = listIndex,
         _sectionRealIndexes = sectionRealIndexes,
@@ -140,13 +138,13 @@ class RenderExpandableListItemContainer extends RenderBox
     }
   }
 
-  get headerController => _headerController;
+  get headerController => _controller;
 
-  set headerController(ExpandableListHeaderController value) {
-    if (_headerController == value) {
+  set headerController(ExpandableListController value) {
+    if (_controller == value) {
       return;
     }
-    _headerController = value;
+    _controller = value;
     markNeedsLayout();
   }
 
@@ -243,33 +241,39 @@ class RenderExpandableListItemContainer extends RenderBox
 
     //update stickyIndex
     double sliverListOffset = _getSliverListVisibleScrollOffset();
-    if (_containerOffsets.length <= _listIndex ||
-        (_listIndex > 0 && _containerOffsets[_listIndex] <= 0)) {
+//    print(sliverListOffset);
+    if (_controller.containerOffsets.length <= _listIndex ||
+        (_listIndex > 0 && _controller.containerOffsets[_listIndex] <= 0)) {
       _refreshContainerLayoutOffsets();
     }
-    double currContainerOffset = _listIndex < _containerOffsets.length
-        ? _containerOffsets[_listIndex]
-        : -1;
+    double currContainerOffset =
+        _listIndex < _controller.containerOffsets.length
+            ? _controller.containerOffsets[_listIndex]
+            : -1;
     bool containerPainted = (_listIndex == 0 && currContainerOffset == 0) ||
         currContainerOffset > 0;
     if (!containerPainted) {
       positionChild(header, Offset.zero);
       return;
     }
-    double minScrollOffset = _listIndex >= _containerOffsets.length
+    double minScrollOffset = _listIndex >= _controller.containerOffsets.length
         ? 0
-        : _containerOffsets[_listIndex];
+        : _controller.containerOffsets[_listIndex];
     double maxScrollOffset = minScrollOffset + size.height;
     if (sliverListOffset > minScrollOffset &&
         sliverListOffset <= maxScrollOffset) {
       if (_stickyIndex != _listIndex) {
         _stickyIndex = _listIndex;
-        if (_headerController != null) {
-          _headerController.stickySectionIndex = sectionIndex;
+        if (_controller != null) {
+          _controller.stickySectionIndex = sectionIndex;
         }
       }
     } else {
       _stickyIndex = -1;
+      if (_controller != null && _isSliverListOutside()) {
+        print("outside");
+        _controller.stickySectionIndex = -1;
+      }
     }
 
     //calc header offset
@@ -285,7 +289,7 @@ class RenderExpandableListItemContainer extends RenderBox
     positionChild(header, Offset(0, min(currHeaderOffset, headerMaxOffset)));
 
     //callback header hide percent
-    if (_headerController != null) {
+    if (_controller != null) {
       if (currHeaderOffset >= headerMaxOffset) {
         double switchingPercent = 0;
         if (currHeaderOffset > height) {
@@ -295,11 +299,11 @@ class RenderExpandableListItemContainer extends RenderBox
           switchingPercent =
               (currHeaderOffset - headerMaxOffset) / header.size.height;
         }
-        _headerController.updatePercent(sectionIndex, switchingPercent);
+        _controller.updatePercent(sectionIndex, switchingPercent);
       } else if (sliverListOffset < minScrollOffset + content.size.height) {
         //ensure callback 0% percent.
-        if (_headerController.stickySectionIndex == sectionIndex) {
-          _headerController.updatePercent(sectionIndex, 0);
+        if (_controller.stickySectionIndex == sectionIndex) {
+          _controller.updatePercent(sectionIndex, 0);
         }
       }
     }
@@ -314,16 +318,21 @@ class RenderExpandableListItemContainer extends RenderBox
         _renderSliver.constraints.scrollOffset;
   }
 
+  bool _isSliverListOutside() {
+    return _renderSliver.constraints.remainingPaintExtent <
+        _renderSliver.constraints.viewportMainAxisExtent;
+  }
+
   void _refreshContainerLayoutOffsets() {
     _renderSliver.visitChildren((renderObject) {
       var containerParentData =
           renderObject.parentData as SliverMultiBoxAdaptorParentData;
 //      print("visitChildren $containerParentData");
 
-      while (_containerOffsets.length <= containerParentData.index) {
-        _containerOffsets.add(0);
+      while (_controller.containerOffsets.length <= containerParentData.index) {
+        _controller.containerOffsets.add(0);
       }
-      _containerOffsets[containerParentData.index] =
+      _controller.containerOffsets[containerParentData.index] =
           containerParentData.layoutOffset;
     });
   }
