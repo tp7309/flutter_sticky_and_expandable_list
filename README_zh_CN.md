@@ -18,7 +18,7 @@
 
 ```yaml
 dependencies:
-  sticky_and_expandable_list: '^0.2.0-beta'
+  sticky_and_expandable_list: ^0.2.0-beta
 ```
 
 ## 使用示例
