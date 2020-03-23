@@ -60,6 +60,9 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///sliver list builder
   SliverChildBuilderDelegate delegate;
 
+  ///when section is collapsed, all child widget in content widget will be removed.
+  bool removeItemsOnCollapsed = true;
+
   SliverExpandableChildDelegate(
       {@required this.sectionList,
       @required this.itemBuilder,
@@ -68,6 +71,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
       this.headerBuilder,
       this.sectionBuilder,
       this.sticky = true,
+      this.removeItemsOnCollapsed = true,
       bool addAutomaticKeepAlives = true,
       bool addRepaintBoundaries = true,
       bool addSemanticIndexes = true})
@@ -86,8 +90,11 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           int sectionRealIndex = sectionRealIndexes[sectionIndex];
           int itemRealIndex = sectionRealIndex;
 
+          bool hasChildren =
+              ((removeItemsOnCollapsed && !section.isSectionExpanded()) ||
+                  section.getItems() == null);
           //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
-          var children = (section.getItems() == null)
+          var children = hasChildren
               ? <Widget>[]
               : List.generate(
                   section.getItems().length,
@@ -101,17 +108,17 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
             sticky: sticky,
             controller: controller,
             header: null,
-            children: children,
             content: Column(
               children: children,
             ),
+            children: children,
           );
           Widget container = sectionBuilder != null
               ? sectionBuilder(context, containerInfo)
               : null;
           if (container == null) {
-            containerInfo.header =
-                headerBuilder(context, sectionIndex, sectionRealIndex);
+            containerInfo
+              ..header = headerBuilder(context, sectionIndex, sectionRealIndex);
             container = ExpandableSectionContainer(
               info: containerInfo,
             );
@@ -135,8 +142,11 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
                 _computeSemanticChildCount(section.getItems()?.length ?? 0);
             int itemRealIndex = sectionRealIndex;
 
+            bool hasChildren =
+                ((removeItemsOnCollapsed && !section.isSectionExpanded()) ||
+                    section.getItems() == null);
             //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
-            var children = (section.getItems() == null)
+            var children = hasChildren
                 ? <Widget>[]
                 : List.generate(
                     sectionChildCount,
@@ -162,8 +172,9 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
                 ? sectionBuilder(context, containerInfo)
                 : null;
             if (container == null) {
-              containerInfo.header =
-                  headerBuilder(context, sectionIndex, sectionRealIndex);
+              containerInfo
+                ..header =
+                    headerBuilder(context, sectionIndex, sectionRealIndex);
               container = ExpandableSectionContainer(
                 info: containerInfo,
               );
@@ -225,12 +236,9 @@ class ExpandableListController extends ChangeNotifier {
 
   ExpandableListController();
 
-  ///internal
-  List<double> _containerOffsets = List<double>();
-
   ///store [ExpandableSectionContainer] information. [SliverList index, layoutOffset].
   ///don't modify it.
-  List<double> get containerOffsets => _containerOffsets;
+  List<double> containerOffsets = List<double>();
 
   double get percent => _percent;
 

@@ -46,7 +46,6 @@ class _ExampleListViewState extends State<ExampleListView> {
           //toggle section expand state
           setState(() {
             section.setSectionExpanded(!section.isSectionExpanded());
-
           });
         });
   }

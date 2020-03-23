@@ -32,7 +32,17 @@ class _ExampleCustomSectionAnimationState
               );
             },
             sectionBuilder: (context, containerInfo) => _SectionWidget(
-                sectionList[containerInfo.sectionIndex], containerInfo),
+              section: sectionList[containerInfo.sectionIndex],
+              containerInfo: containerInfo,
+              onStateChanged: () {
+                //notify ExpandableListView that expand state has changed.
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    setState(() {});
+                  }
+                });
+              },
+            ),
           ),
         ));
   }
@@ -41,8 +51,9 @@ class _ExampleCustomSectionAnimationState
 class _SectionWidget extends StatefulWidget {
   final ExampleSection section;
   final ExpandableSectionContainerInfo containerInfo;
+  final VoidCallback onStateChanged;
 
-  _SectionWidget(this.section, this.containerInfo);
+  _SectionWidget({this.section, this.containerInfo, this.onStateChanged});
 
   @override
   __SectionWidgetState createState() => __SectionWidgetState();
@@ -62,7 +73,7 @@ class __SectionWidgetState extends State<_SectionWidget>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _iconTurns =
         _controller.drive(_halfTween.chain(CurveTween(curve: Curves.easeIn)));
     _heightFactor = _controller.drive(CurveTween(curve: Curves.easeIn));
@@ -103,36 +114,25 @@ class __SectionWidgetState extends State<_SectionWidget>
   }
 
   void _onTap() {
-    setState(() {
-      widget.section.setSectionExpanded(!widget.section.isSectionExpanded());
-      if (widget.section.isSectionExpanded()) {
-        _controller.forward();
-      } else {
-        _controller.reverse().then<void>((void value) {
-          if (mounted) {
-            setState(() {
-              // Rebuild without widget.children.
-            });
-          }
-        });
+    widget.section.setSectionExpanded(!widget.section.isSectionExpanded());
+    if (widget.section.isSectionExpanded()) {
+      if (mounted && widget.onStateChanged != null) {
+        widget.onStateChanged();
       }
-    });
+      _controller.forward().then((_) {});
+    } else {
+      _controller.reverse().then<void>((void value) {
+        if (mounted && widget.onStateChanged != null) {
+          widget.onStateChanged();
+        }
+      });
+    }
   }
 
   Widget _buildContent() {
-    final bool closed =
-        !widget.section.isSectionExpanded() && _controller.isDismissed;
-    return AnimatedBuilder(
-      animation: _controller.view,
-      builder: (context, child) {
-        return ClipRect(
-          child: Align(
-            heightFactor: _heightFactor.value,
-            child: child,
-          ),
-        );
-      },
-      child: closed ? null : Column(children: widget.containerInfo.children),
+    return SizeTransition(
+      sizeFactor: _heightFactor,
+      child: widget.containerInfo.content,
     );
   }
 }

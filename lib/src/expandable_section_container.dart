@@ -76,7 +76,7 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
     return RenderExpandableSectionContainer(
       renderSliver: renderSliver,
       scrollable: Scrollable.of(context),
-      headerController: this.info.controller,
+      controller: this.info.controller,
       sticky: this.info.sticky,
       listIndex: this.info.listIndex,
       sectionRealIndexes: this.info.sectionRealIndexes,
@@ -117,7 +117,7 @@ class RenderExpandableSectionContainer extends RenderBox
 
   RenderExpandableSectionContainer({
     @required ScrollableState scrollable,
-    ExpandableListController headerController,
+    ExpandableListController controller,
     sticky = true,
     int listIndex = -1,
     List<int> sectionRealIndexes = const [],
@@ -126,7 +126,7 @@ class RenderExpandableSectionContainer extends RenderBox
     RenderBox content,
     RenderSliverList renderSliver,
   })  : _scrollable = scrollable,
-        _controller = headerController,
+        _controller = controller,
         _sticky = sticky,
         _listIndex = listIndex,
         _sectionRealIndexes = sectionRealIndexes,
@@ -178,7 +178,7 @@ class RenderExpandableSectionContainer extends RenderBox
     }
   }
 
-  get controller => _controller;
+  ExpandableListController get controller => _controller;
 
   set controller(ExpandableListController value) {
     if (_controller == value) {
@@ -284,10 +284,11 @@ class RenderExpandableSectionContainer extends RenderBox
         (_listIndex > 0 && _controller.containerOffsets[_listIndex] <= 0)) {
       _refreshContainerLayoutOffsets();
     }
-    double currContainerOffset =
-        _listIndex < _controller.containerOffsets.length
-            ? _controller.containerOffsets[_listIndex]
-            : -1;
+
+    double currContainerOffset = -1;
+    if (_listIndex < _controller.containerOffsets.length) {
+      currContainerOffset = _controller.containerOffsets[_listIndex];
+    }
     bool containerPainted = (_listIndex == 0 && currContainerOffset == 0) ||
         currContainerOffset > 0;
     if (!containerPainted) {
@@ -298,6 +299,20 @@ class RenderExpandableSectionContainer extends RenderBox
         ? 0
         : _controller.containerOffsets[_listIndex];
     double maxScrollOffset = minScrollOffset + size.height;
+
+    //when [ExpandableSectionContainer] size changed, SliverList may give a wrong
+    // layoutOffset at first tim, so check offsets for store right layoutOffset
+    // in [containerOffsets].
+    if (_listIndex < _controller.containerOffsets.length) {
+      currContainerOffset = _controller.containerOffsets[_listIndex];
+      int nextListIndex = _listIndex + 1;
+      if (nextListIndex < _controller.containerOffsets.length &&
+          _controller.containerOffsets[nextListIndex] < maxScrollOffset) {
+        _controller.containerOffsets =
+            _controller.containerOffsets.sublist(0, nextListIndex);
+      }
+    }
+
     if (sliverListOffset > minScrollOffset &&
         sliverListOffset <= maxScrollOffset) {
       if (_stickyIndex != _listIndex) {
