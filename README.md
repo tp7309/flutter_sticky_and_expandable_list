@@ -20,7 +20,7 @@ In the `pubspec.yaml` of your flutter project, add the following dependency:
 
 ```yaml
 dependencies:
-  sticky_and_expandable_list: '^0.1.0'
+  sticky_and_expandable_list: '^0.2.0-beta'
 ```
 
 ## Basic Usage
@@ -32,24 +32,30 @@ dependencies:
     return ExpandableListView(
       builder: SliverExpandableChildDelegate<String, ExampleSection>(
           sectionList: sectionList,
-          headerBuilder: (context, section, index) => Text("Header #$index"),
-          itemBuilder: (context, section, item, index) => ListTile(
-                leading: CircleAvatar(
-                  child: Text("$index"),
-                ),
-                title: Text(item),
-              )),
+          headerBuilder: (context, sectionIndex, index) =>
+              Text("Header #$sectionIndex"),
+          itemBuilder: (context, sectionIndex, itemIndex, index) {
+            String item = sectionList[sectionIndex].items[itemIndex];
+            return ListTile(
+              leading: CircleAvatar(
+                child: Text("$index"),
+              ),
+              title: Text(item),
+            );
+          }),
     );
 ```
 
-[Detail Examples](https://github.com/tp7309/flutter_sticky_and_expandable_list/tree/master/example)
+[Detail Examples](https://github.com/tp7309/flutter_sticky_and_expandable_list/tree/master/example/lib)
 
 ## FAQ
 
 ### How to expand/collapse item?
 
 ```dart
-section.setSectionExpanded(true)
+setState(() {
+  section.setSectionExpanded(true);
+});
 ```
 
 [Example](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_listview.dart)
@@ -75,3 +81,5 @@ section.setSectionExpanded(true)
     return controller;
   }
 ```
+### Customize expand/collapse animation support?
+[Example](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section_animation.dart)

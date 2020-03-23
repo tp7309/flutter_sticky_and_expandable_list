@@ -1,6 +1,6 @@
 name: sticky_and_expandable_list
 description: Flutter implementation of sticky headers and expandable list.Support use it in a CustomScrollView.
-version: 0.1.0
+version: 0.2.0-beta
 homepage: https://github.com/tp7309/flutter_sticky_and_expandable_list
 issue_tracker: https://github.com/tp7309/flutter_sticky_and_expandable_list/issues
 
