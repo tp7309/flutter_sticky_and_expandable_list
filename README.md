@@ -3,7 +3,7 @@
 Flutter implementation of sticky headers and expandable list.Support use it in a CustomScrollView.
 
 [![Pub](https://img.shields.io/pub/v/sticky_and_expandable_list.svg)](https://pub.dartlang.org/packages/sticky_and_expandable_list)
-README i18n:[中文说明](https://raw.githubusercontent.com/tp7309/flutter_sticky_and_expandable_list/master/README_zh_CN.md)
+README i18n:[中文说明](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/README_zh_CN.md)
 
 ![Screenshot](https://raw.githubusercontent.com/tp7309/flutter_sticky_and_expandable_list/master/doc/images/sliverlist.gif)
 
@@ -11,8 +11,8 @@ README i18n:[中文说明](https://raw.githubusercontent.com/tp7309/flutter_stic
 
 - Support build an expandable ListView, which can expand/collapse section group or pin section header.
 - Use it with CustomScrollView、SliverAppBar.
-- Listen the scroll offset of current sticky header,
-  and current sticky header index.
+- Listen the scroll offset of current sticky header, and current sticky header index.
+- Customize expand/collapse animation support.
 
 ## Getting Started
 
@@ -73,7 +73,7 @@ setState(() {
   }
 
   _getHeaderController() {
-    var controller = ExpandableListHeaderController();
+    var controller = ExpandableListController();
     controller.addListener(() {
       print("switchingSectionIndex:${controller.switchingSectionIndex}, stickySectionIndex:" +
           "${controller.stickySectionIndex},scrollPercent:${controller.percent}");
@@ -81,5 +81,14 @@ setState(() {
     return controller;
   }
 ```
+
+### How to set background for each section?
+Use [sectionBuilder](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section_animation.dart)
+
 ### Customize expand/collapse animation support?
 [Example](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section_animation.dart)
+
+
+## Change Log
+
+[CHANGELOG](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/CHANGELOG.md)

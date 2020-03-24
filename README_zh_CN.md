@@ -10,7 +10,8 @@
 
 - 支持构建可切换拆叠/展开状态的 ListView，支持粘性头部。
 - 可以与 Sliver 家族控件配合使用，用在如 CustomScrollView、NestedScrollView 中。
-- 支持监听当前粘性头部的滚动偏移量，可获取当前粘性头部信息。
+- 支持监听当前粘性头部的滚动偏移量，可获取当前粘性头部索引。
+- 支持自定义折叠动画。
 
 ## 开始
 
@@ -21,7 +22,7 @@ dependencies:
   sticky_and_expandable_list: ^0.2.0-beta
 ```
 
-## 使用示例
+## 基础使用示例
 
 ```dart
     //sectionList是ExpandableListView的数据源，需要使用者自己定义。
@@ -45,6 +46,7 @@ dependencies:
 ```
 
 [详细示例](https://github.com/tp7309/flutter_sticky_and_expandable_list/tree/master/example)
+
 
 ## 常见问题
 
@@ -71,7 +73,7 @@ setState(() {
   }
 
   _getHeaderController() {
-    var controller = ExpandableListHeaderController();
+    var controller = ExpandableListController();
     controller.addListener(() {
       print("switchingSectionIndex:${controller.switchingSectionIndex}, stickySectionIndex:" +
           "${controller.stickySectionIndex},scrollPercent:${controller.percent}");
@@ -79,5 +81,15 @@ setState(() {
     return controller;
   }
 ```
-### Customize expand/collapse animation support?
+
+### 如何定制每一组数据的背景、透明试等信息?
+使用[sectionBuilder](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section_animation.dart)
+返回自定义的Widget.
+
+### 自定义折叠动画
+使用Flutter自带动画进行定制:
 [Example](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section_animation.dart)
+
+
+## 更新日志
+[CHANGELOG](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/CHANGELOG.md)
