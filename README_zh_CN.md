@@ -82,7 +82,7 @@ setState(() {
   }
 ```
 
-### 如何定制每一组数据的背景、透明试等信息?
+### 如何定制每一组数据的背景、阴影等信息?
 使用[sectionBuilder](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section_animation.dart)
 返回自定义的Widget.
 
