@@ -218,6 +218,8 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   }
 }
 
+///Used to provide information for each section, each section model 
+///should implement [ExpandableListSection<Item Model>].
 abstract class ExpandableListSection<T> {
   bool isSectionExpanded();
 

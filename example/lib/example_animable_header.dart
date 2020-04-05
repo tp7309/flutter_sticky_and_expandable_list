@@ -32,7 +32,7 @@ class _ExampleAnimableHeaderState extends State<ExampleAnimableHeader> {
               child: Container(
             height: 100,
             width: 100,
-            color: Colors.red,
+            color: Colors.black,
             alignment: Alignment.center,
             child: Text(
               "Sliver",

@@ -5,12 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
-///Section widget that contains header and content widget.
-///You can return a custom [ExpandableSectionContainer]
-///by [SliverExpandableChildDelegate.sectionBuilder], but only
-///[header] and [content] field could be changed.
-///
 
+///Section widget information.
 class ExpandableSectionContainerInfo {
   Widget header;
   Widget content;
@@ -62,6 +58,11 @@ class ExpandableSectionContainerInfo {
       sticky.hashCode;
 }
 
+///Section widget that contains header and content widget.
+///You can return a custom [ExpandableSectionContainer]
+///by [SliverExpandableChildDelegate.sectionBuilder], but only
+///[header] and [content] field could be changed.
+///
 class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
   final ExpandableSectionContainerInfo info;
 
@@ -97,7 +98,7 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
   }
 }
 
-///render [ExpandableSectionContainer]
+///Render [ExpandableSectionContainer]
 class RenderExpandableSectionContainer extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,

@@ -9,10 +9,12 @@ README i18n:[中文说明](https://github.com/tp7309/flutter_sticky_and_expandab
 
 ## Features
 
-- Support build an expandable ListView, which can expand/collapse section group or pin section header.
+- Support build an expandable ListView, which can expand/collapse section or pinned section header.
 - Use it with CustomScrollView、SliverAppBar.
-- Listen the scroll offset of current sticky header, and current sticky header index.
-- Customize expand/collapse animation support.
+- Listen the scroll offset of current sticky header, current sticky header index and switching header index.
+- Only use one list widget, so it supports large data and a small memeory usage.
+- More section customization support, you can return a new section widget by sectionBuilder, to customize ackground，expand/collapse animation, section layout, band so on.
+- Support add divider.
 
 ## Getting Started
 
@@ -83,11 +85,12 @@ setState(() {
 ```
 
 ### How to set background for each section?
+
 Use [sectionBuilder](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section_animation.dart)
 
 ### Customize expand/collapse animation support?
-[Example](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section_animation.dart)
 
+[Example](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section_animation.dart)
 
 ## Change Log
 
