@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../sticky_and_expandable_list.dart';
@@ -218,7 +217,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   }
 }
 
-///Used to provide information for each section, each section model 
+///Used to provide information for each section, each section model
 ///should implement [ExpandableListSection<Item Model>].
 abstract class ExpandableListSection<T> {
   bool isSectionExpanded();
