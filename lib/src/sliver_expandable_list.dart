@@ -205,10 +205,14 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           List sectionList) {
     int calcLength = sectionList?.length ?? 0 - 1;
     List<int> sectionRealIndexes = List<int>();
+    if (calcLength < 0) {
+      return sectionRealIndexes;
+    }
     sectionRealIndexes.add(0);
     int realIndex = 0;
     for (int i = 0; i < calcLength; i++) {
       S section = sectionList[i];
+      //each section model should not null.
       assert(section != null);
       realIndex += 1 + (section.getItems()?.length ?? 0);
       sectionRealIndexes.add(realIndex);
@@ -227,7 +231,7 @@ abstract class ExpandableListSection<T> {
   List<T> getItems();
 }
 
-///controller for listen sticky header offset and current sticky header index.
+///Controller for listen sticky header offset and current sticky header index.
 class ExpandableListController extends ChangeNotifier {
   ///switchingSection scroll percent, [0.1-1.0], 1.0 mean that the last sticky section
   ///is completely hidden.
@@ -275,14 +279,14 @@ class ExpandableListController extends ChangeNotifier {
   }
 }
 
-///check if need rebuild [ExpandableAutoLayoutWidget]
+///Check if need rebuild [ExpandableAutoLayoutWidget]
 abstract class ExpandableAutoLayoutTrigger {
   ExpandableListController get controller;
 
   bool needBuild();
 }
 
-///default [ExpandableAutoLayoutTrigger] implementation, auto build when
+///Default [ExpandableAutoLayoutTrigger] implementation, auto build when
 ///switch sticky header index.
 class ExpandableDefaultAutoLayoutTrigger
     implements ExpandableAutoLayoutTrigger {
@@ -308,8 +312,8 @@ class ExpandableDefaultAutoLayoutTrigger
   ExpandableListController get controller => _controller;
 }
 
-///wrap header widget, when controller is set, the widget will rebuild
-///when sticky header offset changed.
+///Wrap header widget, when controller is set, the widget will rebuild
+///when [trigger] condition matched.
 class ExpandableAutoLayoutWidget extends StatefulWidget {
   ///listen sticky header hide percent, [0.0-0.1].
   final ExpandableAutoLayoutTrigger trigger;
@@ -346,7 +350,7 @@ class _ExpandableAutoLayoutWidgetState
 
   @override
   void dispose() {
-    if (widget.trigger != null && widget.trigger != null) {
+    if (widget.trigger != null && widget.trigger.controller != null) {
       widget.trigger.controller.removeListener(_onChange);
     }
     super.dispose();
