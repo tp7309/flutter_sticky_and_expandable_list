@@ -210,7 +210,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
     for (int i = 0; i < calcLength; i++) {
       S section = sectionList[i];
       assert(section != null);
-      realIndex += 1 + section.getItems()?.length ?? 0;
+      realIndex += 1 + (section.getItems()?.length ?? 0);
       sectionRealIndexes.add(realIndex);
     }
     return sectionRealIndexes;
