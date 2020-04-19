@@ -11,7 +11,7 @@
 - 支持构建可切换拆叠/展开状态的 ListView，支持粘性头部。
 - 可以与 Sliver 家族控件配合使用，用在如 CustomScrollView、NestedScrollView 中。
 - 通过 controller 监听当前粘性头部的滚动偏移量，当前被固定 header 的索引和正在隐藏/显示的 header 的索引值。
-- 整个列表是一个类似 ListView 的控件，Builder 方式创建分组项，所以支持大量数据显示，不会把所有列表项全部创建出来。
+- 整个列表是一个类似 ListView 的控件，Builder 方式创建分组项，所以支持大量数据显示，不会把所有分组全部创建出来。
 - 可使用 sectionBuilder 进行更多 section 控件定制，如背景、自定义折叠/展开动画、不同 section 的布局方式定制等。
 - 支持添加分隔线。
 
@@ -21,7 +21,7 @@
 
 ```yaml
 dependencies:
-  sticky_and_expandable_list: ^0.2.0-beta
+  sticky_and_expandable_list: ^0.2.0
 ```
 
 ## 基础使用示例
