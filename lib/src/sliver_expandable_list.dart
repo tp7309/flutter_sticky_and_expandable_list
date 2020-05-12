@@ -59,7 +59,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///sliver list builder
   SliverChildBuilderDelegate delegate;
 
-  ///when section is collapsed, all child widget in content widget will be removed.
+  ///if value is true, when section is collapsed, all child widget in section widget will be removed.
   bool removeItemsOnCollapsed = true;
 
   SliverExpandableChildDelegate(

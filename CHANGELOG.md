@@ -1,3 +1,6 @@
+## 0.2.1
+- fix bugs on Flutter 1.17.0.
+
 ## 0.2.0
 - import widgets.dart instead of material.dart
 - fix some bugs.

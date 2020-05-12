@@ -1,5 +1,4 @@
 # sticky_and_expandable_list
-
 Flutter implementation of sticky headers and expandable list.Support use it in a CustomScrollView.
 
 [![Pub](https://img.shields.io/pub/v/sticky_and_expandable_list.svg)](https://pub.dartlang.org/packages/sticky_and_expandable_list)
@@ -9,10 +8,10 @@ README i18n:[中文说明](https://github.com/tp7309/flutter_sticky_and_expandab
 
 ## Features
 
-- Build a grouped list, which can expand/collapse section or sticky section header.
+- Build a grouped list, which support expand/collapse section and sticky header.
 - Use it with CustomScrollView、SliverAppBar.
 - Listen the scroll offset of current sticky header, current sticky header index and switching header index.
-- Only use one list widget, so it supports large data and a small memory usage.
+- Only use one list widget, so it supports large data and a normal memory usage.
 - More section customization support, you can return a new section widget by sectionBuilder, to customize background，expand/collapse animation, section layout, and so on.
 - Support add divider.
 
@@ -22,7 +21,7 @@ In the `pubspec.yaml` of your flutter project, add the following dependency:
 
 ```yaml
 dependencies:
-  sticky_and_expandable_list: ^0.2.0
+  sticky_and_expandable_list: ^0.2.1
 ```
 
 ## Basic Usage
@@ -56,7 +55,7 @@ dependencies:
 
 ```dart
 setState(() {
-  section.setSectionExpanded(true);
+  sectionList[i].setSectionExpanded(true);
 });
 ```
 

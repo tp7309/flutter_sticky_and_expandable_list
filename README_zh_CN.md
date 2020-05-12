@@ -1,6 +1,6 @@
 # sticky_and_expandable_list
 
-可拆叠列表的 Flutter 实现，支持固定组标题，可以与 Sliver 家族控件配合使用。
+可拆叠列表的 Flutter 实现，支持粘性头部，可以与 Sliver 家族控件配合使用。
 
 [![Pub](https://img.shields.io/pub/v/sticky_and_expandable_list.svg)](https://pub.dartlang.org/packages/sticky_and_expandable_list)
 
@@ -21,7 +21,7 @@
 
 ```yaml
 dependencies:
-  sticky_and_expandable_list: ^0.2.0
+  sticky_and_expandable_list: ^0.2.1
 ```
 
 ## 基础使用示例
@@ -55,7 +55,7 @@ dependencies:
 
 ```dart
 setState(() {
-  section.setSectionExpanded(true);
+  sectionList[i].setSectionExpanded(true);
 });
 ```
 

@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import '../sticky_and_expandable_list.dart';
 
-
 ///Section widget information.
 class ExpandableSectionContainerInfo {
   Widget header;
@@ -301,7 +300,7 @@ class RenderExpandableSectionContainer extends RenderBox
     double maxScrollOffset = minScrollOffset + size.height;
 
     //when [ExpandableSectionContainer] size changed, SliverList may give a wrong
-    // layoutOffset at first tim, so check offsets for store right layoutOffset
+    // layoutOffset at first time, so check offsets for store right layoutOffset
     // in [containerOffsets].
     if (_listIndex < _controller.containerOffsets.length) {
       currContainerOffset = _controller.containerOffsets[_listIndex];
@@ -379,8 +378,10 @@ class RenderExpandableSectionContainer extends RenderBox
       while (_controller.containerOffsets.length <= containerParentData.index) {
         _controller.containerOffsets.add(0);
       }
-      _controller.containerOffsets[containerParentData.index] =
-          containerParentData.layoutOffset;
+      if (containerParentData.layoutOffset != null) {
+        _controller.containerOffsets[containerParentData.index] =
+            containerParentData.layoutOffset;
+      }
     });
   }
 
