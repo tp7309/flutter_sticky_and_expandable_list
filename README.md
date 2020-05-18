@@ -25,11 +25,11 @@ dependencies:
 ```
 
 ## Basic Usage
-
+`sectionList` is a custom data source for `ExpandableListView`.
+We should create a model list to store the information of each section, the model must implement `ExpandableListSection`.
 ```dart
-    //sectionList is a custom data source for ExpandableListView.
-    //echo ExampleSection class must implement ExpandableListSection.
-    List<ExampleSection> sectionList = MockData.getExampleSections();
+    //In this example, we create a custom model class(ExampleSection).
+    List<ExampleSection> sectionList = List<ExampleSection>();
     return ExpandableListView(
       builder: SliverExpandableChildDelegate<String, ExampleSection>(
           sectionList: sectionList,
@@ -48,6 +48,8 @@ dependencies:
 ```
 
 [Detail Examples](https://github.com/tp7309/flutter_sticky_and_expandable_list/tree/master/example/lib)
+
+If you want to use it with sliver widget, use **SliverExpandableList** instead of ExpandableListView.
 
 ## FAQ
 

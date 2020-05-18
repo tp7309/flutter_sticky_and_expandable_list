@@ -25,11 +25,11 @@ dependencies:
 ```
 
 ## 基础使用示例
-
+`sectionList`是`ExpandableListView`的数据源，需要使用者自己定义。
+我们需要创建一个模型类列表去存储每个组的信息，这个模型类需要实现`ExpandableListSection`接口。
 ```dart
-    //sectionList是ExpandableListView的数据源，需要使用者自己定义。
-    //每个Section类实现ExpandableListSection接口即可。
-    List<ExampleSection> sectionList = MockData.getExampleSections();
+    //在这个示例中，创建了一个自定义的Section类(ExampleSection)。
+    List<ExampleSection> sectionList = List<ExampleSection>();
     return ExpandableListView(
       builder: SliverExpandableChildDelegate<String, ExampleSection>(
           sectionList: sectionList,
@@ -48,6 +48,8 @@ dependencies:
 ```
 
 [详细示例](https://github.com/tp7309/flutter_sticky_and_expandable_list/tree/master/example)
+
+如果是与Sliver控件一起使用的话，使用**SliverExpandableList** 来代替ExpandableListView.
 
 ## 常见问题
 
