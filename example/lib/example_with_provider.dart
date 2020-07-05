@@ -1,26 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
-import 'mock_data.dart';
+import 'package:provider/provider.dart';
 
-class ExampleCustomSectionAnimation extends StatefulWidget {
+class ExampleWithProvider extends StatefulWidget {
   @override
-  _ExampleCustomSectionAnimationState createState() =>
-      _ExampleCustomSectionAnimationState();
+  _ExampleWithProviderState createState() => _ExampleWithProviderState();
 }
 
-class _ExampleCustomSectionAnimationState
-    extends State<ExampleCustomSectionAnimation> {
-  var sectionList = MockData.getExampleSections(3, 3);
+class _ExampleWithProviderState extends State<ExampleWithProvider> {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => SectionListModel(),
+      child: TestScaffold(),
+    );
+  }
+}
 
+class TestScaffold extends StatefulWidget {
+  @override
+  _TestScaffoldState createState() => _TestScaffoldState();
+}
+
+class _TestScaffoldState extends State<TestScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("CustomSectionAnimation Example"),
+          title: Text("With Provider Example"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Section"),
+              onPressed: () {
+                Provider.of<SectionListModel>(context, listen: false)
+                    .addSection(Section()
+                      ..header = "NewHeader"
+                      ..expanded = true);
+              },
+            ),
+            FlatButton(
+              child: Text("Item"),
+              onPressed: () {
+                Provider.of<SectionListModel>(context, listen: false)
+                    .addItem("List Tile");
+              },
+            )
+          ],
         ),
-        body: ExpandableListView(
-          builder: SliverExpandableChildDelegate<String, ExampleSection>(
+        body: _buildListView());
+  }
+
+  _buildListView() {
+    print("buildListView");
+    return Consumer<SectionListModel>(
+      builder: (context, model, child) {
+        print("enter builder");
+        var sectionList = model.sectionList;
+        return ExpandableListView(
+          builder: SliverExpandableChildDelegate<String, Section>(
             sectionList: sectionList,
             itemBuilder: (context, sectionIndex, itemIndex, index) {
               String item = sectionList[sectionIndex].items[itemIndex];
@@ -44,12 +82,14 @@ class _ExampleCustomSectionAnimationState
               },
             ),
           ),
-        ));
+        );
+      },
+    );
   }
 }
 
 class _SectionWidget extends StatefulWidget {
-  final ExampleSection section;
+  final Section section;
   final ExpandableSectionContainerInfo containerInfo;
   final VoidCallback onStateChanged;
 
@@ -117,6 +157,7 @@ class __SectionWidgetState extends State<_SectionWidget>
     );
   }
 
+  ///toggle expand state
   void _onTap() {
     widget.section.setSectionExpanded(!widget.section.isSectionExpanded());
     if (widget.section.isSectionExpanded()) {
@@ -134,5 +175,66 @@ class __SectionWidgetState extends State<_SectionWidget>
       sizeFactor: _heightFactor,
       child: widget.containerInfo.content,
     );
+  }
+}
+
+class SectionListModel extends ChangeNotifier {
+  List<Section> sectionList;
+
+  SectionListModel() {
+    sectionList = List<Section>();
+    var section = Section()
+      ..header = "Header"
+      ..expanded = true;
+    sectionList.add(section);
+  }
+
+  Future requestData() {
+    sectionList = List<Section>()..add(Section()..header = "Header #0");
+    return Future.value(sectionList);
+  }
+
+  void addSection(Section section) {
+    sectionList.add(section);
+    notifyListeners();
+  }
+
+  void addItem(String item) {
+    var section = sectionList[sectionList.length - 1];
+    if (section.items == null) {
+      section.items = List();
+    }
+    section.items.add(item);
+    notifyListeners();
+  }
+}
+
+///Section model example
+///
+///Section model must implements ExpandableListSection<T>, each section has
+///expand state, sublist. "T" is the model of each item in the sublist.
+class Section implements ExpandableListSection<String> {
+  //store expand state.
+  bool expanded;
+
+  //return item model list.
+  List<String> items;
+
+  //example header, optional
+  String header;
+
+  @override
+  List<String> getItems() {
+    return items;
+  }
+
+  @override
+  bool isSectionExpanded() {
+    return expanded;
+  }
+
+  @override
+  void setSectionExpanded(bool expanded) {
+    this.expanded = expanded;
   }
 }

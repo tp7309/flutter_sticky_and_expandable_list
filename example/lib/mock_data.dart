@@ -4,10 +4,10 @@ import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 /// create some example data.
 ///
 class MockData {
-  ///return a example list, by default, we have 10 sections,
+  ///return a example list, by default, we have 4 sections,
   ///each section has 5 items.
   static List<ExampleSection> getExampleSections(
-      [sectionSize = 10, itemSize = 5]) {
+      [sectionSize = 4, itemSize = 5]) {
     var sections = List<ExampleSection>();
     for (int i = 0; i < sectionSize; i++) {
       var section = ExampleSection()

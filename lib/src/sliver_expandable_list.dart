@@ -60,7 +60,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   SliverChildBuilderDelegate delegate;
 
   ///if value is true, when section is collapsed, all child widget in section widget will be removed.
-  bool removeItemsOnCollapsed = true;
+  bool removeItemsOnCollapsed;
 
   SliverExpandableChildDelegate(
       {@required this.sectionList,
@@ -70,7 +70,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
       this.headerBuilder,
       this.sectionBuilder,
       this.sticky = true,
-      this.removeItemsOnCollapsed = true,
+      this.removeItemsOnCollapsed = false,
       bool addAutomaticKeepAlives = true,
       bool addRepaintBoundaries = true,
       bool addSemanticIndexes = true})
@@ -89,11 +89,12 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           int sectionRealIndex = sectionRealIndexes[sectionIndex];
           int itemRealIndex = sectionRealIndex;
 
-          bool hasChildren =
+          int sectionChildCount = section.getItems()?.length ?? 0;
+          bool noChildren =
               ((removeItemsOnCollapsed && !section.isSectionExpanded()) ||
-                  section.getItems() == null);
+                  sectionChildCount == 0);
           //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
-          var children = hasChildren
+          var children = noChildren
               ? <Widget>[]
               : List.generate(
                   section.getItems().length,
@@ -137,15 +138,14 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           S section = sectionList[sectionIndex];
           int sectionRealIndex = sectionRealIndexes[sectionIndex];
           if (index.isEven) {
+            int itemRealIndex = sectionRealIndex;
             int sectionChildCount =
                 _computeSemanticChildCount(section.getItems()?.length ?? 0);
-            int itemRealIndex = sectionRealIndex;
-
-            bool hasChildren =
+            bool noChildren =
                 ((removeItemsOnCollapsed && !section.isSectionExpanded()) ||
-                    section.getItems() == null);
+                    sectionChildCount == 0);
             //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
-            var children = hasChildren
+            var children = noChildren
                 ? <Widget>[]
                 : List.generate(
                     sectionChildCount,

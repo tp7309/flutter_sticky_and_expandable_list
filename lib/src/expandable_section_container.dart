@@ -65,8 +65,9 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
   final ExpandableSectionContainerInfo info;
 
   ExpandableSectionContainer({
+    Key key,
     @required this.info,
-  }) : super(children: [info.content, info.header]);
+  }) : super(key: key, children: [info.content, info.header]);
 
   @override
   RenderExpandableSectionContainer createRenderObject(BuildContext context) {
