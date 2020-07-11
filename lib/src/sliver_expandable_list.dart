@@ -46,6 +46,10 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///whether to sticky the header.
   final bool sticky;
 
+  /// Whether the header should be drawn on top of the content
+  /// instead of before.
+  final bool overlapsContent;
+
   ///store section real index in SliverList, format: [sectionList index, SliverList index].
   final List<int> sectionRealIndexes;
 
@@ -70,7 +74,8 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
       this.headerBuilder,
       this.sectionBuilder,
       this.sticky = true,
-      this.removeItemsOnCollapsed = false,
+      this.overlapsContent = false,
+      this.removeItemsOnCollapsed = true,
       bool addAutomaticKeepAlives = true,
       bool addRepaintBoundaries = true,
       bool addSemanticIndexes = true})
@@ -106,6 +111,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
             sectionIndex: sectionIndex,
             sectionRealIndexes: sectionRealIndexes,
             sticky: sticky,
+            overlapsContent: overlapsContent,
             controller: controller,
             header: null,
             content: Column(
@@ -160,6 +166,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
               sectionIndex: sectionIndex,
               sectionRealIndexes: sectionRealIndexes,
               sticky: sticky,
+              overlapsContent: overlapsContent,
               controller: controller,
               header: null,
               children: children,

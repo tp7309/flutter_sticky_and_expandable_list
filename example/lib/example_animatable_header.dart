@@ -2,12 +2,12 @@ import 'package:example/mock_data.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
-class ExampleAnimableHeader extends StatefulWidget {
+class ExampleAnimatableHeader extends StatefulWidget {
   @override
-  _ExampleAnimableHeaderState createState() => _ExampleAnimableHeaderState();
+  _ExampleAnimatableHeaderState createState() => _ExampleAnimatableHeaderState();
 }
 
-class _ExampleAnimableHeaderState extends State<ExampleAnimableHeader> {
+class _ExampleAnimatableHeaderState extends State<ExampleAnimatableHeader> {
   var sectionList = MockData.getExampleSections();
   var _controller = ExpandableListController();
 
@@ -25,7 +25,7 @@ class _ExampleAnimableHeaderState extends State<ExampleAnimableHeader> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Amimable Header Example")),
+      appBar: AppBar(title: Text("Animatable Header Example")),
       body: CustomScrollView(
         slivers: <Widget>[
           SliverToBoxAdapter(

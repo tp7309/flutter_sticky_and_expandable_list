@@ -16,6 +16,7 @@ class ExpandableSectionContainerInfo {
   final ExpandableListController controller;
   final int sectionIndex;
   final bool sticky;
+  final bool overlapsContent;
 
   ExpandableSectionContainerInfo(
       {this.header,
@@ -26,7 +27,8 @@ class ExpandableSectionContainerInfo {
       this.separated,
       this.controller,
       this.sectionIndex,
-      this.sticky});
+      this.sticky,
+      this.overlapsContent});
 
   @override
   bool operator ==(Object other) =>
@@ -41,7 +43,8 @@ class ExpandableSectionContainerInfo {
           separated == other.separated &&
           controller == other.controller &&
           sectionIndex == other.sectionIndex &&
-          sticky == other.sticky;
+          sticky == other.sticky &&
+          overlapsContent == other.overlapsContent;
 
   @override
   int get hashCode =>
@@ -53,7 +56,8 @@ class ExpandableSectionContainerInfo {
       separated.hashCode ^
       controller.hashCode ^
       sectionIndex.hashCode ^
-      sticky.hashCode;
+      sticky.hashCode ^
+      overlapsContent.hashCode;
 }
 
 ///Section widget that contains header and content widget.
@@ -78,6 +82,7 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
       scrollable: Scrollable.of(context),
       controller: this.info.controller,
       sticky: this.info.sticky,
+      overlapsContent: this.info.overlapsContent,
       listIndex: this.info.listIndex,
       sectionRealIndexes: this.info.sectionRealIndexes,
       separated: this.info.separated,
@@ -91,6 +96,7 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
       ..scrollable = Scrollable.of(context)
       ..controller = this.info.controller
       ..sticky = this.info.sticky
+      ..overlapsContent = this.info.overlapsContent
       ..listIndex = this.info.listIndex
       ..sectionRealIndexes = this.info.sectionRealIndexes
       ..separated = this.info.separated;
@@ -103,6 +109,7 @@ class RenderExpandableSectionContainer extends RenderBox
         ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
   bool _sticky;
+  bool _overlapsContent;
   ScrollableState _scrollable;
   ExpandableListController _controller;
   RenderSliverList _renderSliver;
@@ -119,6 +126,7 @@ class RenderExpandableSectionContainer extends RenderBox
     @required ScrollableState scrollable,
     ExpandableListController controller,
     sticky = true,
+    overlapsContent = false,
     int listIndex = -1,
     List<int> sectionRealIndexes = const [],
     bool separated = false,
@@ -128,6 +136,7 @@ class RenderExpandableSectionContainer extends RenderBox
   })  : _scrollable = scrollable,
         _controller = controller,
         _sticky = sticky,
+        _overlapsContent = overlapsContent,
         _listIndex = listIndex,
         _sectionRealIndexes = sectionRealIndexes,
         _separated = separated,
@@ -201,6 +210,16 @@ class RenderExpandableSectionContainer extends RenderBox
     }
   }
 
+  get overlapsContent => _overlapsContent;
+
+  set overlapsContent(bool value) {
+    if (_overlapsContent == value) {
+      return;
+    }
+    _overlapsContent = value;
+    markNeedsLayout();
+  }
+
   get listIndex => _listIndex;
 
   set listIndex(int value) {
@@ -237,26 +256,38 @@ class RenderExpandableSectionContainer extends RenderBox
 
   @override
   double computeMinIntrinsicWidth(double height) {
-    return max(header.getMinIntrinsicWidth(height),
-        content.getMinIntrinsicWidth(height));
+    return _overlapsContent
+        ? max(header.getMinIntrinsicWidth(height),
+            content.getMinIntrinsicWidth(height))
+        : header.getMinIntrinsicWidth(height) +
+            content.getMinIntrinsicWidth(height);
   }
 
   @override
   double computeMaxIntrinsicWidth(double height) {
-    return max(header.getMaxIntrinsicWidth(height),
-        content.getMaxIntrinsicWidth(height));
+    return _overlapsContent
+        ? max(header.getMaxIntrinsicWidth(height),
+            content.getMaxIntrinsicWidth(height))
+        : header.getMaxIntrinsicWidth(height) +
+            content.getMaxIntrinsicWidth(height);
   }
 
   @override
   double computeMinIntrinsicHeight(double width) {
-    return header.getMinIntrinsicHeight(width) +
-        content.getMinIntrinsicHeight(width);
+    return _overlapsContent
+        ? max(header.getMinIntrinsicHeight(width),
+            content.getMinIntrinsicHeight(width))
+        : header.getMinIntrinsicHeight(width) +
+            content.getMinIntrinsicHeight(width);
   }
 
   @override
   double computeMaxIntrinsicHeight(double width) {
-    return header.getMaxIntrinsicHeight(width) +
-        content.getMaxIntrinsicHeight(width);
+    return _overlapsContent
+        ? max(header.getMaxIntrinsicHeight(width),
+            content.getMaxIntrinsicHeight(width))
+        : header.getMaxIntrinsicHeight(width) +
+            content.getMaxIntrinsicHeight(width);
   }
 
   @override
@@ -268,16 +299,19 @@ class RenderExpandableSectionContainer extends RenderBox
     header.layout(exactlyConstraints, parentUsesSize: true);
     content.layout(exactlyConstraints, parentUsesSize: true);
 
+    //header's size should not large than content's size.
+    double headerLogicalExtent = _overlapsContent ? 0 : header.size.height;
+
     double width =
         max(constraints.minWidth, max(header.size.width, content.size.width));
-    double height =
-        max(constraints.minHeight, header.size.height + content.size.height);
+    double height = max(constraints.minHeight,
+        max(header.size.height, headerLogicalExtent + content.size.height));
     size = Size(width, height);
     assert(size.width == constraints.constrainWidth(width));
     assert(size.height == constraints.constrainHeight(height));
 
     //calc content offset
-    positionChild(content, Offset(0, header.size.height));
+    positionChild(content, Offset(0, headerLogicalExtent));
 
     double sliverListOffset = _getSliverListVisibleScrollOffset();
     if (_controller.containerOffsets.length <= _listIndex ||
@@ -335,7 +369,7 @@ class RenderExpandableSectionContainer extends RenderBox
 
     //calc header offset
     double currHeaderOffset = 0;
-    double headerMaxOffset = content.size.height;
+    double headerMaxOffset = height - header.size.height;
     if (_sticky && isStickyChild && sliverListOffset > minScrollOffset) {
       currHeaderOffset = sliverListOffset - minScrollOffset;
     }
@@ -351,7 +385,7 @@ class RenderExpandableSectionContainer extends RenderBox
         double switchingPercent =
             (currHeaderOffset - headerMaxOffset) / header.size.height;
         _controller.updatePercent(sectionIndex, switchingPercent);
-      } else if (sliverListOffset < minScrollOffset + content.size.height &&
+      } else if (sliverListOffset < minScrollOffset + headerMaxOffset &&
           _controller.switchingSectionIndex == sectionIndex) {
         //ensure callback 0% percent.
         _controller.updatePercent(sectionIndex, 0);
