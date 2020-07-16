@@ -334,6 +334,18 @@ class RenderExpandableSectionContainer extends RenderBox
         : _controller.containerOffsets[_listIndex];
     double maxScrollOffset = minScrollOffset + size.height;
 
+    if (_renderSliver.constraints.normalizedGrowthDirection ==
+        GrowthDirection.reverse) {
+      maxScrollOffset = minScrollOffset +
+          size.height -
+          _renderSliver.constraints.viewportMainAxisExtent;
+
+      minScrollOffset = 0.0 -
+          (size.height - _renderSliver.constraints.viewportMainAxisExtent) +
+          (sliverListOffset * 2) -
+          minScrollOffset;
+    }
+
     //when [ExpandableSectionContainer] size changed, SliverList may give a wrong
     // layoutOffset at first time, so check offsets for store right layoutOffset
     // in [containerOffsets].
