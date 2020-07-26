@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'example_animatable_header.dart';
+import 'example_custom_section.dart';
 import 'example_listview.dart';
 import 'example_sliver.dart';
 
@@ -44,12 +45,12 @@ class _HomePage extends StatelessWidget {
         children: <Widget>[
           _Item("ListView Example", (context) => ExampleListView()),
           _Item("Sliver Example", (context) => ExampleSliver()),
-          _Item(
-              "Animatable Header Example", (context) => ExampleAnimatableHeader()),
+          _Item("Animatable Header Example",
+              (context) => ExampleAnimatableHeader()),
+          _Item("CustomSection Example", (context) => ExampleCustomSection()),
           _Item("CustomSectionAnimation Example",
               (context) => ExampleCustomSectionAnimation()),
-          _Item("Side Header Example",
-                  (context) => ExampleSideHeader()),
+          _Item("Side Header Example", (context) => ExampleSideHeader()),
           _Item("With Provider Example", (context) => ExampleWithProvider()),
         ],
       ),
