@@ -29,6 +29,8 @@ dependencies:
 我们需要创建一个模型类列表去存储每个组的信息，这个模型类需要实现`ExpandableListSection`接口。
 ```dart
     //在这个示例中，创建了一个自定义的Section类(ExampleSection)。
+    //class ExampleSection implements ExpandableListSection<String> {}
+    //so: SliverExpandableChildDelegate<String, ExampleSection>()
     List<ExampleSection> sectionList = List<ExampleSection>();
     return ExpandableListView(
       builder: SliverExpandableChildDelegate<String, ExampleSection>(

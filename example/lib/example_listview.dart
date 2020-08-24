@@ -12,6 +12,9 @@ class _ExampleListViewState extends State<ExampleListView> {
 
   @override
   Widget build(BuildContext context) {
+    //In this example, we create a custom model class(ExampleSection).
+    //class ExampleSection implements ExpandableListSection<String> {}
+    //so: SliverExpandableChildDelegate<String, ExampleSection>()
     return Scaffold(
         appBar: AppBar(title: Text("ListView Example")),
         body: ExpandableListView(
