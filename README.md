@@ -21,7 +21,7 @@ In the `pubspec.yaml` of your flutter project, add the following dependency:
 
 ```yaml
 dependencies:
-  sticky_and_expandable_list: ^0.2.1
+  sticky_and_expandable_list: ^0.2.3
 ```
 
 ## Basic Usage
@@ -29,6 +29,8 @@ dependencies:
 We should create a model list to store the information of each section, the model must implement `ExpandableListSection`.
 ```dart
     //In this example, we create a custom model class(ExampleSection).
+    //class ExampleSection implements ExpandableListSection<String> {}
+    //so: SliverExpandableChildDelegate<String, ExampleSection>()
     List<ExampleSection> sectionList = List<ExampleSection>();
     return ExpandableListView(
       builder: SliverExpandableChildDelegate<String, ExampleSection>(

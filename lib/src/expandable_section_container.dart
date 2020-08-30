@@ -180,9 +180,9 @@ class RenderExpandableSectionContainer extends RenderBox
     _scrollable = value;
     markNeedsLayout();
     if (attached) {
-      oldValue.position?.removeListener(markNeedsLayout);
+      oldValue.widget.controller?.removeListener(markNeedsLayout);
       if (_sticky) {
-        _scrollable.position?.addListener(markNeedsLayout);
+        _scrollable.widget.controller?.addListener(markNeedsLayout);
       }
     }
   }
@@ -206,7 +206,7 @@ class RenderExpandableSectionContainer extends RenderBox
     _sticky = value;
     markNeedsLayout();
     if (attached && !_sticky) {
-      _scrollable.position?.removeListener(markNeedsLayout);
+      _scrollable.widget.controller?.removeListener(markNeedsLayout);
     }
   }
 
@@ -240,13 +240,13 @@ class RenderExpandableSectionContainer extends RenderBox
   void attach(PipelineOwner owner) {
     super.attach(owner);
     if (sticky) {
-      _scrollable.position?.addListener(markNeedsLayout);
+      _scrollable.widget.controller?.addListener(markNeedsLayout);
     }
   }
 
   @override
   void detach() {
-    _scrollable.position?.removeListener(markNeedsLayout);
+    _scrollable.widget.controller?.removeListener(markNeedsLayout);
     super.detach();
   }
 
