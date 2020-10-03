@@ -84,6 +84,12 @@ class __SectionWidgetState extends State<_SectionWidget>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     widget.containerInfo
       ..header = _buildHeader()
