@@ -122,15 +122,13 @@ class __SectionWidgetState extends State<_SectionWidget>
   void _onTap() {
     widget.section.setSectionExpanded(!widget.section.isSectionExpanded());
     if (widget.section.isSectionExpanded()) {
-      if (mounted && widget.onStateChanged != null) {
-        widget.onStateChanged();
-      }
-      _controller.forward().then((_) {});
+      widget?.onStateChanged();
+      _controller.forward().then((_) {
+        widget?.onStateChanged();
+      });
     } else {
-      _controller.reverse().then<void>((void value) {
-        if (mounted && widget.onStateChanged != null) {
-          widget.onStateChanged();
-        }
+      _controller.reverse().then((_) {
+        widget?.onStateChanged();
       });
     }
   }
