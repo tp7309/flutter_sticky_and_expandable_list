@@ -35,7 +35,7 @@ class _ExampleCustomSectionAnimationState
               section: sectionList[containerInfo.sectionIndex],
               containerInfo: containerInfo,
               onStateChanged: () {
-                // notify ExpandableListView that expand state has changed, calc new layout etc...
+                //notify ExpandableListView that expand state has changed.
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (mounted) {
                     setState(() {});
@@ -88,6 +88,12 @@ class __SectionWidgetState extends State<_SectionWidget>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     widget.containerInfo
       ..header = _buildHeader()
@@ -120,11 +126,11 @@ class __SectionWidgetState extends State<_SectionWidget>
   void _onTap() {
     widget.section.setSectionExpanded(!widget.section.isSectionExpanded());
     if (widget.section.isSectionExpanded()) {
-      widget.onStateChanged();
+      widget?.onStateChanged();
       _controller.forward();
     } else {
-      _controller.reverse().then<void>((_) {
-        widget.onStateChanged();
+      _controller.reverse().then((_) {
+        widget?.onStateChanged();
       });
     }
   }

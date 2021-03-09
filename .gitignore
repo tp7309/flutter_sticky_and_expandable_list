@@ -19,3 +19,4 @@ doc/api/
 .DS_Store
 .vscode/
 .history/
+.last_build_id

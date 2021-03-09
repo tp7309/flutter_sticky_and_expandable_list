@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:example/example_custom_section_animation.dart';
-import 'package:example/example_with_provider.dart';
 import 'package:example/example_side_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,7 +50,6 @@ class _HomePage extends StatelessWidget {
           _Item("CustomSectionAnimation Example",
               (context) => ExampleCustomSectionAnimation()),
           _Item("Side Header Example", (context) => ExampleSideHeader()),
-          _Item("With Provider Example", (context) => ExampleWithProvider()),
         ],
       ),
     );
