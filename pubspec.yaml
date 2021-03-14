@@ -1,6 +1,6 @@
 name: sticky_and_expandable_list
 description: Build a grouped list, which support expand/collapse section and sticky header, support use it with sliver widget.
-version: 0.2.3
+version: 0.3.0
 homepage: https://github.com/tp7309/flutter_sticky_and_expandable_list
 issue_tracker: https://github.com/tp7309/flutter_sticky_and_expandable_list/issues
 

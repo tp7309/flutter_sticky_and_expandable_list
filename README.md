@@ -14,6 +14,7 @@ README i18n:[中文说明](https://github.com/tp7309/flutter_sticky_and_expandab
 - Only use one list widget, so it supports large data and a normal memory usage.
 - More section customization support, you can return a new section widget by sectionBuilder, to customize background，expand/collapse animation, section layout, and so on.
 - Support add divider.
+- Support overlap content.
 
 ## Getting Started
 
