@@ -1,3 +1,8 @@
+## 0.3.0
+- support overlapsContent property.
+- add more examples.
+- [Bugfix]show error when collapse sticky section or last section.
+
 ## 0.2.3
 - [Bugfix]the header will move from top to the position where I click last item/position #18
 

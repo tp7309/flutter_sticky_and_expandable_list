@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:example/example_custom_section_animation.dart';
+import 'package:example/example_nested_scroll_view.dart';
 import 'package:example/example_side_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,6 +50,8 @@ class _HomePage extends StatelessWidget {
           _Item("CustomSection Example", (context) => ExampleCustomSection()),
           _Item("CustomSectionAnimation Example",
               (context) => ExampleCustomSectionAnimation()),
+          _Item("NestedScrollView Example",
+              (context) => ExampleNestedScrollView()),
           _Item("Side Header Example", (context) => ExampleSideHeader()),
         ],
       ),
