@@ -66,7 +66,7 @@ class _Item extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Theme.of(context).primaryColor,
-      child: FlatButton(
+      child: TextButton(
         onPressed: () =>
             Navigator.of(context).push(new MaterialPageRoute(builder: builder)),
         child: Text(

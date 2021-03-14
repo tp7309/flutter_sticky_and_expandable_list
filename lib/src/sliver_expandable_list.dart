@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 import '../sticky_and_expandable_list.dart';
@@ -25,13 +27,59 @@ class SliverExpandableList extends SliverList {
     @required this.builder,
   })  : assert(builder != null),
         super(key: key, delegate: builder.delegate);
+
+  @override
+  RenderSliverList createRenderObject(BuildContext context) {
+    final SliverMultiBoxAdaptorElement element =
+        context as SliverMultiBoxAdaptorElement;
+    return RenderExpandableSliverList(childManager: element)
+      ..expandStateList = _buildExpandStateList();
+  }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, RenderExpandableSliverList renderObject) {
+    var oldRenderList = renderObject.expandStateList;
+    renderObject.expandStateList = _buildExpandStateList();
+    if (!renderObject.sizeChanged &&
+        listEquals(oldRenderList, renderObject.expandStateList)) {
+      renderObject.sizeChanged = true;
+    }
+    super.updateRenderObject(context, renderObject);
+  }
+
+  List<bool> _buildExpandStateList() {
+    List<ExpandableListSection> sectionList = builder.sectionList;
+    return List.generate(
+        sectionList.length, (index) => sectionList[index].isSectionExpanded());
+  }
+}
+
+class RenderExpandableSliverList extends RenderSliverList {
+  /// Creates a sliver that places multiple box children in a linear array along
+  /// the main axis.
+  ///
+  /// The [childManager] argument must not be null.
+
+  List<bool> expandStateList = [];
+  bool sizeChanged = false;
+
+  RenderExpandableSliverList({
+    @required RenderSliverBoxChildManager childManager,
+  }) : super(childManager: childManager);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    sizeChanged = false;
+  }
 }
 
 /// A delegate that supplies children for [SliverExpandableList] using
 /// a builder callback.
 class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///data source
-  final List sectionList;
+  final List<S> sectionList;
 
   ///build section header
   final ExpandableHeaderBuilder headerBuilder;
@@ -211,7 +259,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
       _buildSectionRealIndexes<T, S extends ExpandableListSection<T>>(
           List sectionList) {
     int calcLength = sectionList?.length ?? 0 - 1;
-    List<int> sectionRealIndexes = List<int>();
+    List<int> sectionRealIndexes = List<int>.empty(growable: true);
     if (calcLength < 0) {
       return sectionRealIndexes;
     }
@@ -250,7 +298,7 @@ class ExpandableListController extends ChangeNotifier {
 
   ///store [ExpandableSectionContainer] information. [SliverList index, layoutOffset].
   ///don't modify it.
-  List<double> containerOffsets = List<double>();
+  List<double> containerOffsets = [];
 
   double get percent => _percent;
 
@@ -282,7 +330,7 @@ class ExpandableListController extends ChangeNotifier {
 
   @override
   String toString() {
-    return 'ExpandableListController{_percent: $_percent, _switchingSectionIndex: $_switchingSectionIndex, _stickySectionIndex: $_stickySectionIndex}';
+    return 'ExpandableListController{_percent: $_percent, _switchingSectionIndex: $_switchingSectionIndex, _stickySectionIndex: $_stickySectionIndex} #$hashCode';
   }
 }
 

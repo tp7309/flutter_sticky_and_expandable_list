@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/rendering.dart';
 import '../sticky_and_expandable_list.dart';
 
 ///Section widget information.
@@ -76,7 +76,7 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
   @override
   RenderExpandableSectionContainer createRenderObject(BuildContext context) {
     var renderSliver =
-        context.findAncestorRenderObjectOfType<RenderSliverList>();
+        context.findAncestorRenderObjectOfType<RenderExpandableSliverList>();
     return RenderExpandableSectionContainer(
       renderSliver: renderSliver,
       scrollable: Scrollable.of(context),
@@ -112,7 +112,7 @@ class RenderExpandableSectionContainer extends RenderBox
   bool _overlapsContent;
   ScrollableState _scrollable;
   ExpandableListController _controller;
-  RenderSliverList _renderSliver;
+  RenderExpandableSliverList _renderSliver;
   int _listIndex;
   int _stickyIndex = -1;
 
@@ -132,7 +132,7 @@ class RenderExpandableSectionContainer extends RenderBox
     bool separated = false,
     RenderBox header,
     RenderBox content,
-    RenderSliverList renderSliver,
+    RenderExpandableSliverList renderSliver,
   })  : _scrollable = scrollable,
         _controller = controller,
         _sticky = sticky,
@@ -173,6 +173,14 @@ class RenderExpandableSectionContainer extends RenderBox
 
   set scrollable(ScrollableState value) {
     assert(value != null);
+    // print("$runtimeType  update scrollable: ${_renderSliver.sizeChanged}");
+
+    //when collapse last section, Sliver list not callback correct offset, so layout again.
+    if (_renderSliver.sizeChanged) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        markNeedsLayout();
+      });
+    }
     if (_scrollable == value) {
       return;
     }
@@ -380,18 +388,16 @@ class RenderExpandableSectionContainer extends RenderBox
     positionChild(header, Offset(0, min(currHeaderOffset, headerMaxOffset)));
 
     //callback header hide percent
-    if (_controller != null) {
-      if (currHeaderOffset >= headerMaxOffset && currHeaderOffset <= height) {
-        double switchingPercent =
-            (currHeaderOffset - headerMaxOffset) / header.size.height;
-        _controller.updatePercent(sectionIndex, switchingPercent);
-      } else if (sliverListOffset < minScrollOffset + headerMaxOffset &&
-          _controller.switchingSectionIndex == sectionIndex) {
-        //ensure callback 0% percent.
-        _controller.updatePercent(sectionIndex, 0);
-        //reset switchingSectionIndex
-        _controller.updatePercent(-1, 1);
-      }
+    if (currHeaderOffset >= headerMaxOffset && currHeaderOffset <= height) {
+      double switchingPercent =
+          (currHeaderOffset - headerMaxOffset) / header.size.height;
+      _controller.updatePercent(sectionIndex, switchingPercent);
+    } else if (sliverListOffset < minScrollOffset + headerMaxOffset &&
+        _controller.switchingSectionIndex == sectionIndex) {
+      //ensure callback 0% percent.
+      _controller.updatePercent(sectionIndex, 0);
+      //reset switchingSectionIndex
+      _controller.updatePercent(-1, 1);
     }
   }
 

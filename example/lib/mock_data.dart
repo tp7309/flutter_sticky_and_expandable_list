@@ -7,8 +7,8 @@ class MockData {
   ///return a example list, by default, we have 4 sections,
   ///each section has 5 items.
   static List<ExampleSection> getExampleSections(
-      [sectionSize = 4, itemSize = 5]) {
-    var sections = List<ExampleSection>();
+      [sectionSize = 10, itemSize = 5]) {
+    var sections = List<ExampleSection>.empty(growable: true);
     for (int i = 0; i < sectionSize; i++) {
       var section = ExampleSection()
         ..header = "Header #$i"
@@ -20,7 +20,6 @@ class MockData {
   }
 }
 
-
 ///Section model example
 ///
 ///Section model must implements ExpandableListSection<T>, each section has
@@ -28,6 +27,7 @@ class MockData {
 class ExampleSection implements ExpandableListSection<String> {
   //store expand state.
   bool expanded;
+
   //return item model list.
   List<String> items;
 
