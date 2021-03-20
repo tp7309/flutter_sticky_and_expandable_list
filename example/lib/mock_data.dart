@@ -7,7 +7,7 @@ class MockData {
   ///return a example list, by default, we have 4 sections,
   ///each section has 5 items.
   static List<ExampleSection> getExampleSections(
-      [sectionSize = 10, itemSize = 5]) {
+      [int sectionSize = 10, int itemSize = 5]) {
     var sections = List<ExampleSection>.empty(growable: true);
     for (int i = 0; i < sectionSize; i++) {
       var section = ExampleSection()

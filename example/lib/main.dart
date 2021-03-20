@@ -10,6 +10,7 @@ import 'example_animatable_header.dart';
 import 'example_custom_section.dart';
 import 'example_listview.dart';
 import 'example_sliver.dart';
+import 'example_sub_listview.dart';
 
 void main() {
   runApp(MyApp());
@@ -48,6 +49,7 @@ class _HomePage extends StatelessWidget {
           _Item("Animatable Header Example",
               (context) => ExampleAnimatableHeader()),
           _Item("CustomSection Example", (context) => ExampleCustomSection()),
+          _Item("SubListView Example", (context) => ExampleSubListView()),
           _Item("CustomSectionAnimation Example",
               (context) => ExampleCustomSectionAnimation()),
           _Item("NestedScrollView Example",

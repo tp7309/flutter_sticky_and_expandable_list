@@ -8,7 +8,7 @@ import '../sticky_and_expandable_list.dart';
 class ExpandableSectionContainerInfo {
   Widget header;
   Widget content;
-  final List<Widget> children;
+  final SliverChildBuilderDelegate childDelegate;
   final int listIndex;
   final List<int> sectionRealIndexes;
   final bool separated;
@@ -21,7 +21,7 @@ class ExpandableSectionContainerInfo {
   ExpandableSectionContainerInfo(
       {this.header,
       this.content,
-      this.children,
+      this.childDelegate,
       this.listIndex,
       this.sectionRealIndexes,
       this.separated,
@@ -37,7 +37,6 @@ class ExpandableSectionContainerInfo {
           runtimeType == other.runtimeType &&
           header == other.header &&
           content == other.content &&
-          children == other.children &&
           listIndex == other.listIndex &&
           sectionRealIndexes == other.sectionRealIndexes &&
           separated == other.separated &&
@@ -50,7 +49,6 @@ class ExpandableSectionContainerInfo {
   int get hashCode =>
       header.hashCode ^
       content.hashCode ^
-      children.hashCode ^
       listIndex.hashCode ^
       sectionRealIndexes.hashCode ^
       separated.hashCode ^

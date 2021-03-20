@@ -2,13 +2,13 @@ import 'package:example/mock_data.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
-class ExampleCustomSection extends StatefulWidget {
+class ExampleSubListView extends StatefulWidget {
   @override
-  _ExampleCustomSectionState createState() => _ExampleCustomSectionState();
+  _ExampleSubListViewState createState() => _ExampleSubListViewState();
 }
 
-class _ExampleCustomSectionState extends State<ExampleCustomSection> {
-  var sectionList = MockData.getExampleSections();
+class _ExampleSubListViewState extends State<ExampleSubListView> {
+  var sectionList = MockData.getExampleSections(10, 20);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,10 @@ class _ExampleCustomSectionState extends State<ExampleCustomSection> {
               sectionBuilder: _buildSection,
               itemBuilder: (context, sectionIndex, itemIndex, index) {
                 String item = sectionList[sectionIndex].items[itemIndex];
-                return SizedBox(
+                print("section:$sectionIndex itemIndex:$itemIndex");
+                return Container(
+                  color: Colors.orange,
+                  height: 300,
                   child: ListTile(
                     leading: CircleAvatar(
                       child: Text("$index"),
@@ -35,15 +38,14 @@ class _ExampleCustomSectionState extends State<ExampleCustomSection> {
   Widget _buildSection(
       BuildContext context, ExpandableSectionContainerInfo containerInfo) {
     containerInfo
-      ..header = _buildHeader(context, containerInfo)
+      ..header = _buildHeader(containerInfo)
       ..content = _buildContent(context, containerInfo);
     return ExpandableSectionContainer(
       info: containerInfo,
     );
   }
 
-  Widget _buildHeader(
-      BuildContext context, ExpandableSectionContainerInfo containerInfo) {
+  Widget _buildHeader(ExpandableSectionContainerInfo containerInfo) {
     ExampleSection section = sectionList[containerInfo.sectionIndex];
     return InkWell(
         child: Container(
@@ -69,15 +71,12 @@ class _ExampleCustomSectionState extends State<ExampleCustomSection> {
     if (!section.isSectionExpanded()) {
       return Container();
     }
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3,
+    return Container(
+      height: 1000,
+      child: ListView.builder(
+        itemBuilder: containerInfo.childDelegate.builder,
+        itemCount: containerInfo.childDelegate.childCount,
       ),
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: containerInfo.childDelegate.builder,
-      itemCount: containerInfo.childDelegate.childCount,
     );
   }
 }

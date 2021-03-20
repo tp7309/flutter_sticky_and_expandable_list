@@ -103,6 +103,11 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
 
   ///use this return a custom content widget, when use this builder, headerBuilder
   ///is invalid.
+  /// See also:
+  ///
+  ///  * <https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section.dart>,
+  ///  a description of what ExpandableSectionBuilder are and how to use it.
+  ///
   ExpandableSectionBuilder sectionBuilder;
 
   ///expandable list controller, listen sticky header index scroll offset etc.
@@ -140,19 +145,15 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           int sectionIndex = index;
           S section = sectionList[sectionIndex];
           int sectionRealIndex = sectionRealIndexes[sectionIndex];
-          int itemRealIndex = sectionRealIndex;
 
           int sectionChildCount = section.getItems()?.length ?? 0;
-          bool noChildren =
-              ((removeItemsOnCollapsed && !section.isSectionExpanded()) ||
-                  sectionChildCount == 0);
-          //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
-          var children = noChildren
-              ? <Widget>[]
-              : List.generate(
-                  section.getItems().length,
-                  (i) =>
-                      itemBuilder(context, sectionIndex, i, ++itemRealIndex));
+          if (!section.isSectionExpanded()) {
+            sectionChildCount = 0;
+          }
+          var childBuilderDelegate = SliverChildBuilderDelegate(
+              (context, i) => itemBuilder(
+                  context, sectionIndex, i, sectionRealIndex + i + 1),
+              childCount: sectionChildCount);
           var containerInfo = ExpandableSectionContainerInfo(
             separated: false,
             listIndex: index,
@@ -162,21 +163,22 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
             overlapsContent: overlapsContent,
             controller: controller,
             header: null,
-            content: Column(
-              children: children,
-            ),
-            children: children,
+            content: null,
+            childDelegate: childBuilderDelegate,
           );
           Widget container = sectionBuilder != null
               ? sectionBuilder(context, containerInfo)
               : null;
           if (container == null) {
             containerInfo
-              ..header = headerBuilder(context, sectionIndex, sectionRealIndex);
+              ..header = headerBuilder(context, sectionIndex, sectionRealIndex)
+              ..content = buildDefaultContent(context, containerInfo);
             container = ExpandableSectionContainer(
               info: containerInfo,
             );
           }
+          assert(containerInfo.header != null);
+          assert(containerInfo.content != null);
           return container;
         },
         childCount: sectionList.length,
@@ -195,19 +197,18 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
             int itemRealIndex = sectionRealIndex;
             int sectionChildCount =
                 _computeSemanticChildCount(section.getItems()?.length ?? 0);
-            bool noChildren =
-                ((removeItemsOnCollapsed && !section.isSectionExpanded()) ||
-                    sectionChildCount == 0);
-            //user List.generate() instead of list generator for compatible with Dart versions below 2.3.0.
-            var children = noChildren
-                ? <Widget>[]
-                : List.generate(
-                    sectionChildCount,
-                    (i) => i.isEven
-                        ? itemBuilder(
-                            context, sectionIndex, i ~/ 2, ++itemRealIndex)
-                        : separatorBuilder(context, false, itemRealIndex - 1));
-
+            if (!section.isSectionExpanded()) {
+              sectionChildCount = 0;
+            }
+            var childBuilderDelegate = SliverChildBuilderDelegate((context, i) {
+              int itemRealIndex = sectionRealIndex + (i ~/ 2) + 1;
+              if (i.isEven) {
+                return itemBuilder(
+                    context, sectionIndex, i ~/ 2, itemRealIndex);
+              } else {
+                return separatorBuilder(context, false, itemRealIndex);
+              }
+            }, childCount: sectionChildCount);
             var containerInfo = ExpandableSectionContainerInfo(
               separated: true,
               listIndex: index,
@@ -217,10 +218,8 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
               overlapsContent: overlapsContent,
               controller: controller,
               header: null,
-              children: children,
-              content: Column(
-                children: children,
-              ),
+              content: null,
+              childDelegate: childBuilderDelegate,
             );
             Widget container = sectionBuilder != null
                 ? sectionBuilder(context, containerInfo)
@@ -228,11 +227,14 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
             if (container == null) {
               containerInfo
                 ..header =
-                    headerBuilder(context, sectionIndex, sectionRealIndex);
+                    headerBuilder(context, sectionIndex, sectionRealIndex)
+                ..content = buildDefaultContent(context, containerInfo);
               container = ExpandableSectionContainer(
                 info: containerInfo,
               );
             }
+            assert(containerInfo.header != null);
+            assert(containerInfo.content != null);
             return container;
           } else {
             itemView = separatorBuilder(context, true,
@@ -249,6 +251,20 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
         },
       );
     }
+  }
+
+  ///By default, build a Column widget for layout all children's size.
+  static Widget buildDefaultContent(
+      BuildContext context, ExpandableSectionContainerInfo containerInfo) {
+    if (containerInfo == null) {
+      return Container();
+    }
+    var childDelegate = containerInfo.childDelegate;
+    var children = List.generate(childDelegate.childCount,
+        (index) => childDelegate.builder(context, index));
+    return Column(
+      children: children,
+    );
   }
 
   static int _computeSemanticChildCount(int itemCount) {
