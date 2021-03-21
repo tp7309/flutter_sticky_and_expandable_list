@@ -194,7 +194,6 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           S section = sectionList[sectionIndex];
           int sectionRealIndex = sectionRealIndexes[sectionIndex];
           if (index.isEven) {
-            int itemRealIndex = sectionRealIndex;
             int sectionChildCount =
                 _computeSemanticChildCount(section.getItems()?.length ?? 0);
             if (!section.isSectionExpanded()) {

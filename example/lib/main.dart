@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:example/example_custom_section_animation.dart';
 import 'package:example/example_nested_scroll_view.dart';
 import 'package:example/example_side_header.dart';
+import 'package:example/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -30,8 +31,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: _HomePage(),
+      routes: _buildRoutes(),
     );
+  }
+
+  Map<String, WidgetBuilder> _buildRoutes() {
+    return {
+      RoutePath.home: (context) => _HomePage(),
+      RoutePath.listView: (context) => ExampleListView(),
+      RoutePath.sliver: (context) => ExampleSliver(),
+      RoutePath.animatableHeader: (context) => ExampleAnimatableHeader(),
+      RoutePath.customSection: (context) => ExampleCustomSection(),
+      RoutePath.subListView: (context) => ExampleSubListView(),
+      RoutePath.customSectionAnimation: (context) =>
+          ExampleCustomSectionAnimation(),
+      RoutePath.nestedScrollView: (context) => ExampleNestedScrollView(),
+      RoutePath.sideHeader: (context) => ExampleSideHeader(),
+    };
   }
 }
 
@@ -44,17 +60,15 @@ class _HomePage extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          _Item("ListView Example", (context) => ExampleListView()),
-          _Item("Sliver Example", (context) => ExampleSliver()),
-          _Item("Animatable Header Example",
-              (context) => ExampleAnimatableHeader()),
-          _Item("CustomSection Example", (context) => ExampleCustomSection()),
-          _Item("SubListView Example", (context) => ExampleSubListView()),
+          _Item("ListView Example", RoutePath.listView),
+          _Item("Sliver Example", RoutePath.sliver),
+          _Item("Animatable Header Example", RoutePath.animatableHeader),
+          _Item("CustomSection Example", RoutePath.customSection),
+          _Item("SubListView Example", RoutePath.subListView),
           _Item("CustomSectionAnimation Example",
-              (context) => ExampleCustomSectionAnimation()),
-          _Item("NestedScrollView Example",
-              (context) => ExampleNestedScrollView()),
-          _Item("Side Header Example", (context) => ExampleSideHeader()),
+              RoutePath.customSectionAnimation),
+          _Item("NestedScrollView Example", RoutePath.nestedScrollView),
+          _Item("Side Header Example", RoutePath.sideHeader),
         ],
       ),
     );
@@ -62,18 +76,18 @@ class _HomePage extends StatelessWidget {
 }
 
 class _Item extends StatelessWidget {
-  final WidgetBuilder builder;
+  final String jumpUrl;
   final String title;
 
-  _Item(this.title, this.builder);
+  _Item(this.title, this.jumpUrl);
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      key: ValueKey(jumpUrl),
       color: Theme.of(context).primaryColor,
       child: TextButton(
-        onPressed: () =>
-            Navigator.of(context).push(new MaterialPageRoute(builder: builder)),
+        onPressed: () => Navigator.of(context).pushNamed(jumpUrl),
         child: Text(
           title,
           style: TextStyle(color: Colors.white, fontSize: 18),

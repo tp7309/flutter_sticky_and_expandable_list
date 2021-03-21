@@ -11,8 +11,8 @@ class MockData {
     var sections = List<ExampleSection>.empty(growable: true);
     for (int i = 0; i < sectionSize; i++) {
       var section = ExampleSection()
-        ..header = "Header #$i"
-        ..items = List.generate(itemSize, (index) => "List tile #$index")
+        ..header = "Header#$i"
+        ..items = List.generate(itemSize, (index) => "ListTile #$index")
         ..expanded = true;
       sections.add(section);
     }

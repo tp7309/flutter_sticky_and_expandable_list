@@ -20,3 +20,5 @@ doc/api/
 .vscode/
 .history/
 .last_build_id
+flutter_*.log
+Podfile.lock
