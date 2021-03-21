@@ -1,20 +1,50 @@
 import 'package:example/mock_data.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
+import 'package:example/example_custom_section.dart';
 
-class ExampleSubListView extends StatefulWidget {
+///if you want user ListView inside ExpandableListView, you have two options:
+///
+///Option 1:
+///use shrinkWrap:true, like [ExampleCustomSection]
+///
+///Option 2:
+///wrap ListView with SizeBox/Container, like [ExampleNestedListView], fixed length.
+///
+class ExampleNestedListView extends StatefulWidget {
   @override
-  _ExampleSubListViewState createState() => _ExampleSubListViewState();
+  _ExampleNestedListViewState createState() => _ExampleNestedListViewState();
 }
 
-class _ExampleSubListViewState extends State<ExampleSubListView> {
+class _ExampleNestedListViewState extends State<ExampleNestedListView> {
   var sectionList = MockData.getExampleSections(10, 20);
+
+  ScrollController _scrollListener;
+
+  Drag drag;
+
+  DragStartDetails dragStartDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollListener = new ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollListener?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("CustomSection Example")),
+        appBar: AppBar(title: Text("NestedListView Example")),
         body: ExpandableListView(
+          controller: _scrollListener,
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
               sectionList: sectionList,
               sectionBuilder: _buildSection,
@@ -23,7 +53,6 @@ class _ExampleSubListViewState extends State<ExampleSubListView> {
                 print("section:$sectionIndex itemIndex:$itemIndex");
                 return Container(
                   color: Colors.orange,
-                  height: 300,
                   child: ListTile(
                     leading: CircleAvatar(
                       child: Text("$index"),
@@ -72,11 +101,45 @@ class _ExampleSubListViewState extends State<ExampleSubListView> {
       return Container();
     }
     return Container(
-      height: 1000,
-      child: ListView.builder(
-        itemBuilder: containerInfo.childDelegate.builder,
-        itemCount: containerInfo.childDelegate.childCount,
+      height: 300,
+      child: NotificationListener(
+        onNotification: _onNotification,
+        child: ListView.builder(
+          physics: AlwaysScrollableScrollPhysics(),
+          itemBuilder: containerInfo.childDelegate.builder,
+          itemCount: containerInfo.childDelegate.childCount,
+        ),
       ),
     );
+  }
+
+  bool _onNotification(ScrollNotification notification) {
+    var metrics = notification.metrics;
+    if (notification is ScrollEndNotification) {
+      drag = null;
+    }
+    if (metrics.axis == Axis.horizontal || _scrollListener == null) {
+      return true;
+    }
+    if (notification is ScrollStartNotification) {
+      drag = null;
+      dragStartDetails = notification.dragDetails;
+    }
+    if (notification is UserScrollNotification) {
+      if (metrics.pixels <= metrics.minScrollExtent) {
+        if (drag == null) {
+          drag = _scrollListener.position.drag(dragStartDetails, () {
+            drag = null;
+          });
+        }
+      } else if (metrics.pixels >= metrics.maxScrollExtent) {
+        if (drag == null) {
+          drag = _scrollListener.position.drag(dragStartDetails, () {
+            drag = null;
+          });
+        }
+      }
+    }
+    return true;
   }
 }

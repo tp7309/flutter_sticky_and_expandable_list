@@ -9,6 +9,15 @@ class ExampleListView extends StatefulWidget {
 
 class _ExampleListViewState extends State<ExampleListView> {
   var sectionList = MockData.getExampleSections();
+  var controller = ExpandableListController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      print(controller);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +29,7 @@ class _ExampleListViewState extends State<ExampleListView> {
         body: ExpandableListView(
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
               sectionList: sectionList,
+              controller: controller,
               headerBuilder: _buildHeader,
               itemBuilder: (context, sectionIndex, itemIndex, index) {
                 String item = sectionList[sectionIndex].items[itemIndex];

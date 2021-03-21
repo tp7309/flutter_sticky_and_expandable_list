@@ -11,7 +11,7 @@ import 'example_animatable_header.dart';
 import 'example_custom_section.dart';
 import 'example_listview.dart';
 import 'example_sliver.dart';
-import 'example_sub_listview.dart';
+import 'example_nested_listview.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       RoutePath.sliver: (context) => ExampleSliver(),
       RoutePath.animatableHeader: (context) => ExampleAnimatableHeader(),
       RoutePath.customSection: (context) => ExampleCustomSection(),
-      RoutePath.subListView: (context) => ExampleSubListView(),
+      RoutePath.nestedListView: (context) => ExampleNestedListView(),
       RoutePath.customSectionAnimation: (context) =>
           ExampleCustomSectionAnimation(),
       RoutePath.nestedScrollView: (context) => ExampleNestedScrollView(),
@@ -64,7 +64,7 @@ class _HomePage extends StatelessWidget {
           _Item("Sliver Example", RoutePath.sliver),
           _Item("Animatable Header Example", RoutePath.animatableHeader),
           _Item("CustomSection Example", RoutePath.customSection),
-          _Item("SubListView Example", RoutePath.subListView),
+          _Item("NestedListView Example", RoutePath.nestedListView),
           _Item("CustomSectionAnimation Example",
               RoutePath.customSectionAnimation),
           _Item("NestedScrollView Example", RoutePath.nestedScrollView),
