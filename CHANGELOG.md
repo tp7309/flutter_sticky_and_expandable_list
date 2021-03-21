@@ -1,3 +1,7 @@
+## 0.3.1
+- support add nested list view, but has some limit.
+- add integration_test for example.
+
 ## 0.3.0
 - support overlapsContent property.
 - add more examples.
