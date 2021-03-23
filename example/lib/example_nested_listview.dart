@@ -50,7 +50,6 @@ class _ExampleNestedListViewState extends State<ExampleNestedListView> {
               sectionBuilder: _buildSection,
               itemBuilder: (context, sectionIndex, itemIndex, index) {
                 String item = sectionList[sectionIndex].items[itemIndex];
-                print("section:$sectionIndex itemIndex:$itemIndex");
                 return Container(
                   color: Colors.orange,
                   child: ListTile(

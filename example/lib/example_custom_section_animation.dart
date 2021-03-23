@@ -96,14 +96,14 @@ class __SectionWidgetState extends State<_SectionWidget>
   @override
   Widget build(BuildContext context) {
     widget.containerInfo
-      ..header = _buildHeader()
-      ..content = _buildContent();
+      ..header = _buildHeader(context)
+      ..content = _buildContent(context);
     return ExpandableSectionContainer(
       info: widget.containerInfo,
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       color: Colors.lightBlue,
       child: ListTile(
@@ -135,10 +135,11 @@ class __SectionWidgetState extends State<_SectionWidget>
     }
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return SizeTransition(
       sizeFactor: _heightFactor,
-      child: widget.containerInfo.content,
+      child: SliverExpandableChildDelegate.buildDefaultContent(
+          context, widget.containerInfo),
     );
   }
 }

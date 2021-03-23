@@ -17,7 +17,6 @@ void main() {
 
       await tester.pumpAndSettle();
       var listView = find.byType(ExpandableListView);
-      double delta = 30;
       var header0 = find.text("Header#0");
       var header1 = find.text("Header#1");
       var header2 = find.text("Header#2");

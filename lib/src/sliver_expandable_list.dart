@@ -23,10 +23,9 @@ class SliverExpandableList extends SliverList {
   final SliverExpandableChildDelegate builder;
 
   SliverExpandableList({
-    Key key,
-    @required this.builder,
-  })  : assert(builder != null),
-        super(key: key, delegate: builder.delegate);
+    Key? key,
+    required this.builder,
+  }) : super(key: key, delegate: builder.delegate);
 
   @override
   RenderSliverList createRenderObject(BuildContext context) {
@@ -65,7 +64,7 @@ class RenderExpandableSliverList extends RenderSliverList {
   bool sizeChanged = false;
 
   RenderExpandableSliverList({
-    @required RenderSliverBoxChildManager childManager,
+    required RenderSliverBoxChildManager childManager,
   }) : super(childManager: childManager);
 
   @override
@@ -82,14 +81,14 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   final List<S> sectionList;
 
   ///build section header
-  final ExpandableHeaderBuilder headerBuilder;
+  final ExpandableHeaderBuilder? headerBuilder;
 
   ///build section item
   final ExpandableItemBuilder itemBuilder;
 
   ///build header and item separator, if pass null, SliverList has no separators.
   ///default null.
-  final ExpandableSeparatorBuilder separatorBuilder;
+  final ExpandableSeparatorBuilder? separatorBuilder;
 
   ///whether to sticky the header.
   final bool sticky;
@@ -108,20 +107,21 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///  * <https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/example/lib/example_custom_section.dart>,
   ///  a description of what ExpandableSectionBuilder are and how to use it.
   ///
-  ExpandableSectionBuilder sectionBuilder;
+  ExpandableSectionBuilder? sectionBuilder;
 
   ///expandable list controller, listen sticky header index scroll offset etc.
-  ExpandableListController controller;
+  ExpandableListController? controller;
 
   ///sliver list builder
-  SliverChildBuilderDelegate delegate;
+  late SliverChildBuilderDelegate delegate;
 
   ///if value is true, when section is collapsed, all child widget in section widget will be removed.
-  bool removeItemsOnCollapsed;
+  @Deprecated("unused property")
+  final bool removeItemsOnCollapsed;
 
   SliverExpandableChildDelegate(
-      {@required this.sectionList,
-      @required this.itemBuilder,
+      {required this.sectionList,
+      required this.itemBuilder,
       this.controller,
       this.separatorBuilder,
       this.headerBuilder,
@@ -132,9 +132,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
       bool addAutomaticKeepAlives = true,
       bool addRepaintBoundaries = true,
       bool addSemanticIndexes = true})
-      : assert(sectionList != null),
-        //only use one builder
-        assert(headerBuilder == null || sectionBuilder == null),
+      : assert(headerBuilder == null || sectionBuilder == null),
         sectionRealIndexes = _buildSectionRealIndexes(sectionList) {
     if (controller == null) {
       controller = ExpandableListController();
@@ -161,17 +159,17 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
             sectionRealIndexes: sectionRealIndexes,
             sticky: sticky,
             overlapsContent: overlapsContent,
-            controller: controller,
-            header: null,
-            content: null,
+            controller: controller!,
+            header: Container(),
+            content: Container(),
             childDelegate: childBuilderDelegate,
           );
-          Widget container = sectionBuilder != null
-              ? sectionBuilder(context, containerInfo)
+          Widget? container = sectionBuilder != null
+              ? sectionBuilder!(context, containerInfo)
               : null;
           if (container == null) {
             containerInfo
-              ..header = headerBuilder(context, sectionIndex, sectionRealIndex)
+              ..header = headerBuilder!(context, sectionIndex, sectionRealIndex)
               ..content = buildDefaultContent(context, containerInfo);
             container = ExpandableSectionContainer(
               info: containerInfo,
@@ -205,7 +203,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
                 return itemBuilder(
                     context, sectionIndex, i ~/ 2, itemRealIndex);
               } else {
-                return separatorBuilder(context, false, itemRealIndex);
+                return separatorBuilder!(context, false, itemRealIndex);
               }
             }, childCount: sectionChildCount);
             var containerInfo = ExpandableSectionContainerInfo(
@@ -215,18 +213,18 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
               sectionRealIndexes: sectionRealIndexes,
               sticky: sticky,
               overlapsContent: overlapsContent,
-              controller: controller,
-              header: null,
-              content: null,
+              controller: controller!,
+              header: Container(),
+              content: Container(),
               childDelegate: childBuilderDelegate,
             );
-            Widget container = sectionBuilder != null
-                ? sectionBuilder(context, containerInfo)
+            Widget? container = sectionBuilder != null
+                ? sectionBuilder!(context, containerInfo)
                 : null;
             if (container == null) {
               containerInfo
                 ..header =
-                    headerBuilder(context, sectionIndex, sectionRealIndex)
+                    headerBuilder!(context, sectionIndex, sectionRealIndex)
                 ..content = buildDefaultContent(context, containerInfo);
               container = ExpandableSectionContainer(
                 info: containerInfo,
@@ -236,7 +234,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
             assert(containerInfo.content != null);
             return container;
           } else {
-            itemView = separatorBuilder(context, true,
+            itemView = separatorBuilder!(context, true,
                 sectionIndex + (section.getItems()?.length ?? 0));
           }
           return itemView;
@@ -255,14 +253,11 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///By default, build a Column widget for layout all children's size.
   static Widget buildDefaultContent(
       BuildContext context, ExpandableSectionContainerInfo containerInfo) {
-    if (containerInfo == null) {
-      return Container();
-    }
-    var childDelegate = containerInfo.childDelegate;
-    var children = List.generate(childDelegate.childCount,
+    var childDelegate = containerInfo.childDelegate!;
+    var children = List<Widget?>.generate(childDelegate.childCount!,
         (index) => childDelegate.builder(context, index));
     return Column(
-      children: children,
+      children: children as List<Widget>,
     );
   }
 
@@ -273,7 +268,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   static List<int>
       _buildSectionRealIndexes<T, S extends ExpandableListSection<T>>(
           List sectionList) {
-    int calcLength = sectionList?.length ?? 0 - 1;
+    int calcLength = sectionList.length - 1;
     List<int> sectionRealIndexes = List<int>.empty(growable: true);
     if (calcLength < 0) {
       return sectionRealIndexes;
@@ -283,7 +278,6 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
     for (int i = 0; i < calcLength; i++) {
       S section = sectionList[i];
       //each section model should not null.
-      assert(section != null);
       realIndex += 1 + (section.getItems()?.length ?? 0);
       sectionRealIndexes.add(realIndex);
     }
@@ -298,7 +292,7 @@ abstract class ExpandableListSection<T> {
 
   void setSectionExpanded(bool expanded);
 
-  List<T> getItems();
+  List<T>? getItems();
 }
 
 ///Controller for listen sticky header offset and current sticky header index.
@@ -313,7 +307,7 @@ class ExpandableListController extends ChangeNotifier {
 
   ///store [ExpandableSectionContainer] information. [SliverList index, layoutOffset].
   ///don't modify it.
-  List<double> containerOffsets = [];
+  List<double?> containerOffsets = [];
 
   double get percent => _percent;
 
@@ -391,7 +385,7 @@ class ExpandableAutoLayoutWidget extends StatefulWidget {
   ///build section header
   final WidgetBuilder builder;
 
-  ExpandableAutoLayoutWidget({this.builder, this.trigger});
+  ExpandableAutoLayoutWidget({required this.builder, required this.trigger});
 
   @override
   _ExpandableAutoLayoutWidgetState createState() =>
@@ -403,14 +397,12 @@ class _ExpandableAutoLayoutWidgetState
   @override
   void initState() {
     super.initState();
-    if (widget.trigger != null && widget.trigger.controller != null) {
-      widget.trigger.controller.addListener(_onChange);
-    }
+    widget.trigger.controller.addListener(_onChange);
   }
 
   void _onChange() {
     if (widget.trigger.needBuild()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (mounted) {
           setState(() {});
         }
@@ -420,9 +412,7 @@ class _ExpandableAutoLayoutWidgetState
 
   @override
   void dispose() {
-    if (widget.trigger != null && widget.trigger.controller != null) {
-      widget.trigger.controller.removeListener(_onChange);
-    }
+    widget.trigger.controller.removeListener(_onChange);
     super.dispose();
   }
 
