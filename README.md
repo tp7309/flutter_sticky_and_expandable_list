@@ -22,7 +22,7 @@ In the `pubspec.yaml` of your flutter project, add the following dependency:
 
 ```yaml
 dependencies:
-  sticky_and_expandable_list: ^0.3.1
+  sticky_and_expandable_list: ^1.0.0-nullsafety
 ```
 
 ## Basic Usage

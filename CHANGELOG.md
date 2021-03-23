@@ -1,3 +1,6 @@
+## 1.0.0-nullsafety
+- migrate to nullsafety version.
+
 ## 0.3.1
 - support add nested list view, but has some limit.
 - add integration_test for example.
