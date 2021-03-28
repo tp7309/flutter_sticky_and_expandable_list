@@ -253,12 +253,17 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   ///By default, build a Column widget for layout all children's size.
   static Widget buildDefaultContent(
       BuildContext context, ExpandableSectionContainerInfo containerInfo) {
-    var childDelegate = containerInfo.childDelegate!;
-    var children = List<Widget?>.generate(childDelegate.childCount!,
-        (index) => childDelegate.builder(context, index));
-    return Column(
-      children: children as List<Widget>,
-    );
+    var childDelegate = containerInfo.childDelegate;
+    if (childDelegate != null) {
+      var children =
+          List<Widget>.generate(childDelegate.childCount ?? 0, (index) {
+        return childDelegate.builder(context, index) ?? Container();
+      });
+      return Column(
+        children: children,
+      );
+    }
+    return Container();
   }
 
   static int _computeSemanticChildCount(int itemCount) {
