@@ -101,3 +101,9 @@ setState(() {
 ## 更新日志
 
 [CHANGELOG](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/CHANGELOG.md)
+
+## 支持
+
+觉得对有帮助，请作者喝杯咖啡 (微信)：
+
+![qrcode](https://user-images.githubusercontent.com/5046191/118354036-b075ca80-b59b-11eb-862e-ffd1b8e1659f.png)
