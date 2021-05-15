@@ -99,3 +99,11 @@ Use [sectionBuilder](https://github.com/tp7309/flutter_sticky_and_expandable_lis
 ## Change Log
 
 [CHANGELOG](https://github.com/tp7309/flutter_sticky_and_expandable_list/blob/master/CHANGELOG.md)
+
+## Donate
+
+Buy a cup of coffee for me (Scan by wechat)：
+
+![qrcode](https://user-images.githubusercontent.com/5046191/118354036-b075ca80-b59b-11eb-862e-ffd1b8e1659f.png)
+
+
