@@ -15,6 +15,7 @@
 - 可使用 sectionBuilder 进行更多 section 控件定制，如背景、自定义折叠/展开动画、不同 section 的布局方式定制等。
 - 支持添加分隔线。
 - 支持标题覆盖内容。
+- 支持使用[scroll-to-index](https://github.com/quire-io/scroll-to-index)滚动列表到指定位置。
 
 ## 开始
 

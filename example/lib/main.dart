@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:example/example_custom_section_animation.dart';
 import 'package:example/example_nested_scroll_view.dart';
+import 'package:example/example_scroll_to_index.dart';
 import 'package:example/example_side_header.dart';
 import 'package:example/route_path.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
           ExampleCustomSectionAnimation(),
       RoutePath.nestedScrollView: (context) => ExampleNestedScrollView(),
       RoutePath.sideHeader: (context) => ExampleSideHeader(),
+      RoutePath.scrollToIndex: (context) => ExampleScrollToIndex(),
     };
   }
 }
@@ -69,6 +71,7 @@ class _HomePage extends StatelessWidget {
               RoutePath.customSectionAnimation),
           _Item("NestedScrollView Example", RoutePath.nestedScrollView),
           _Item("Side Header Example", RoutePath.sideHeader),
+          _Item("ScrollToIndex Example", RoutePath.scrollToIndex),
         ],
       ),
     );

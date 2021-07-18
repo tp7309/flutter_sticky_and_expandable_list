@@ -15,6 +15,7 @@ README i18n:[中文说明](https://github.com/tp7309/flutter_sticky_and_expandab
 - More section customization support, you can return a new section widget by sectionBuilder, to customize background，expand/collapse animation, section layout, and so on.
 - Support add divider.
 - Support overlap content.
+- Support scroll to index like ListView, by [scroll-to-index](https://github.com/quire-io/scroll-to-index).
 
 ## Getting Started
 
