@@ -8,4 +8,5 @@ class RoutePath {
   static const customSectionAnimation = "/customSectionAnimation";
   static const nestedScrollView = "/nestedScrollView";
   static const sideHeader = "/sideHeader";
+  static const scrollToIndex = "/scrollToIndex";
 }
