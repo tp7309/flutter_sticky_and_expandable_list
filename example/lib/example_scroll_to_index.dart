@@ -1,4 +1,5 @@
 import 'package:example/mock_data.dart';
+import 'package:example/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
@@ -11,7 +12,7 @@ class ExampleScrollToIndex extends StatefulWidget {
 class _ExampleScrollToIndexState extends State<ExampleScrollToIndex> {
   var sectionList = MockData.getExampleSections(10, 5);
 
-  AutoScrollController scrollController;
+  late AutoScrollController scrollController;
   int counter = 0;
   int maxCount = 10 * (5 + 1) - 1;
 
@@ -30,7 +31,7 @@ class _ExampleScrollToIndexState extends State<ExampleScrollToIndex> {
     //class ExampleSection implements ExpandableListSection<String> {}
     //so: SliverExpandableChildDelegate<String, ExampleSection>()
     return Scaffold(
-      appBar: AppBar(title: Text("ListView Example")),
+      appBar: AppBar(title: TitleText("ListView Example")),
       body: ExpandableListView(
         controller: scrollController,
         builder: SliverExpandableChildDelegate<String, ExampleSection>(
@@ -91,7 +92,7 @@ class _ExampleScrollToIndexState extends State<ExampleScrollToIndex> {
     scrollController.highlight(counter);
   }
 
-  Widget _wrapScrollTag({@required int index, @required Widget child}) =>
+  Widget _wrapScrollTag({required int index, required Widget child}) =>
       AutoScrollTag(
         key: ValueKey(index),
         controller: scrollController,

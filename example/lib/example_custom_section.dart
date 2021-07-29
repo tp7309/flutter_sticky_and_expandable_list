@@ -1,4 +1,5 @@
 import 'package:example/mock_data.dart';
+import 'package:example/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
@@ -13,7 +14,7 @@ class _ExampleCustomSectionState extends State<ExampleCustomSection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("CustomSection Example")),
+        appBar: AppBar(title: TitleText("CustomSection Example")),
         body: ExpandableListView(
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
               sectionList: sectionList,
@@ -76,8 +77,8 @@ class _ExampleCustomSectionState extends State<ExampleCustomSection> {
       ),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemBuilder: containerInfo.childDelegate.builder,
-      itemCount: containerInfo.childDelegate.childCount,
+      itemBuilder: containerInfo.childDelegate!.builder as Widget Function(BuildContext, int),
+      itemCount: containerInfo.childDelegate!.childCount,
     );
   }
 }

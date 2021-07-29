@@ -1,7 +1,9 @@
+## 1.0.0
+- update example to nullsafety version.
+
 ## 1.0.0-nullsafety.1
 - [Bugfix]compatibility error: type 'List<Widget?>' is not a subtype of type 'List<Widget>' in type cast #28.
 
->>>>>>> Stashed changes
 ## 1.0.0-nullsafety
 - migrate to nullsafety version.
 

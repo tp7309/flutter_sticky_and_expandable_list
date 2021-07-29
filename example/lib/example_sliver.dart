@@ -1,3 +1,4 @@
+import 'package:example/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
@@ -22,7 +23,7 @@ class _ExampleSliverState extends State<ExampleSliver> {
               floating: true,
               expandedHeight: 200,
               flexibleSpace: FlexibleSpaceBar(
-                title: Text("Sliver Example"),
+                title: TitleText("Sliver Example"),
               ),
             ),
             SliverExpandableList(
