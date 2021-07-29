@@ -26,13 +26,13 @@ class MockData {
 ///expand state, sublist. "T" is the model of each item in the sublist.
 class ExampleSection implements ExpandableListSection<String> {
   //store expand state.
-  bool expanded;
+  late bool expanded;
 
   //return item model list.
-  List<String> items;
+  late List<String> items;
 
   //example header, optional
-  String header;
+  late String header;
 
   @override
   List<String> getItems() {

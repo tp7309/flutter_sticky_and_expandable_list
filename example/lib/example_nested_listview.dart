@@ -1,4 +1,5 @@
 import 'package:example/mock_data.dart';
+import 'package:example/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -21,11 +22,11 @@ class ExampleNestedListView extends StatefulWidget {
 class _ExampleNestedListViewState extends State<ExampleNestedListView> {
   var sectionList = MockData.getExampleSections(10, 20);
 
-  ScrollController _scrollListener;
+  late ScrollController _scrollListener;
 
-  Drag drag;
+  Drag? drag;
 
-  DragStartDetails dragStartDetails;
+  DragStartDetails? dragStartDetails;
 
   @override
   void initState() {
@@ -42,7 +43,7 @@ class _ExampleNestedListViewState extends State<ExampleNestedListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("NestedListView Example")),
+        appBar: AppBar(title: TitleText("NestedListView Example")),
         body: ExpandableListView(
           controller: _scrollListener,
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
@@ -105,8 +106,8 @@ class _ExampleNestedListViewState extends State<ExampleNestedListView> {
         onNotification: _onNotification,
         child: ListView.builder(
           physics: AlwaysScrollableScrollPhysics(),
-          itemBuilder: containerInfo.childDelegate.builder,
-          itemCount: containerInfo.childDelegate.childCount,
+          itemBuilder: containerInfo.childDelegate!.builder as Widget Function(BuildContext, int),
+          itemCount: containerInfo.childDelegate!.childCount,
         ),
       ),
     );
@@ -126,14 +127,14 @@ class _ExampleNestedListViewState extends State<ExampleNestedListView> {
     }
     if (notification is UserScrollNotification) {
       if (metrics.pixels <= metrics.minScrollExtent) {
-        if (drag == null) {
-          drag = _scrollListener.position.drag(dragStartDetails, () {
+        if (drag == null && dragStartDetails != null) {
+          drag = _scrollListener.position.drag(dragStartDetails!, () {
             drag = null;
           });
         }
       } else if (metrics.pixels >= metrics.maxScrollExtent) {
-        if (drag == null) {
-          drag = _scrollListener.position.drag(dragStartDetails, () {
+        if (drag == null && dragStartDetails != null) {
+          drag = _scrollListener.position.drag(dragStartDetails!, () {
             drag = null;
           });
         }

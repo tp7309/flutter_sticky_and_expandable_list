@@ -5,6 +5,7 @@ import 'package:example/example_nested_scroll_view.dart';
 import 'package:example/example_scroll_to_index.dart';
 import 'package:example/example_side_header.dart';
 import 'package:example/route_path.dart';
+import 'package:example/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter sticky and expandable list',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue,
       ),
       routes: _buildRoutes(),
     );
@@ -58,7 +59,7 @@ class _HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter sticky and expandable list"),
+        title: TitleText("Flutter sticky and expandable list"),
       ),
       body: ListView(
         children: <Widget>[

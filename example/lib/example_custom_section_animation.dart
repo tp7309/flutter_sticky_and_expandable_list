@@ -1,3 +1,4 @@
+import 'package:example/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
@@ -17,7 +18,7 @@ class _ExampleCustomSectionAnimationState
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("CustomSectionAnimation Example"),
+          title: TitleText("CustomSectionAnimation Example"),
         ),
         body: ExpandableListView(
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
@@ -36,7 +37,7 @@ class _ExampleCustomSectionAnimationState
               containerInfo: containerInfo,
               onStateChanged: () {
                 //notify ExpandableListView that expand state has changed.
-                WidgetsBinding.instance.addPostFrameCallback((_) {
+                WidgetsBinding.instance!.addPostFrameCallback((_) {
                   if (mounted) {
                     setState(() {});
                   }
@@ -54,9 +55,9 @@ class _SectionWidget extends StatefulWidget {
   final VoidCallback onStateChanged;
 
   _SectionWidget(
-      {@required this.section,
-      @required this.containerInfo,
-      @required this.onStateChanged})
+      {required this.section,
+      required this.containerInfo,
+      required this.onStateChanged})
       : assert(onStateChanged != null);
 
   @override
@@ -67,11 +68,11 @@ class __SectionWidgetState extends State<_SectionWidget>
     with SingleTickerProviderStateMixin {
   static final Animatable<double> _halfTween =
       Tween<double>(begin: 0.0, end: 0.5);
-  AnimationController _controller;
+  late AnimationController _controller;
 
-  Animation _iconTurns;
+  late Animation _iconTurns;
 
-  Animation<double> _heightFactor;
+  late Animation<double> _heightFactor;
 
   @override
   void initState() {
@@ -112,7 +113,7 @@ class __SectionWidgetState extends State<_SectionWidget>
           style: TextStyle(color: Colors.white),
         ),
         trailing: RotationTransition(
-          turns: _iconTurns,
+          turns: _iconTurns as Animation<double>,
           child: const Icon(
             Icons.expand_more,
             color: Colors.white70,

@@ -12,7 +12,7 @@ class ExampleNestedScrollView extends StatefulWidget {
 class _ExampleNestedScrollViewState extends State<ExampleNestedScrollView>
     with TickerProviderStateMixin {
   var sectionList = MockData.getExampleSections();
-  TabController tabController, subTabController;
+  late TabController tabController, subTabController;
   final GlobalKey<NestedScrollViewState> nestedScrollKey = GlobalKey();
   double _expandedHeight = 200;
 
@@ -24,7 +24,7 @@ class _ExampleNestedScrollViewState extends State<ExampleNestedScrollView>
     this.tabController = TabController(length: 2, vsync: this);
     this.subTabController = TabController(length: 2, vsync: this);
     var headerContentHeight = _expandedHeight - kToolbarHeight;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       outerController.addListener(() {
         var pinned = outerController.offset >= headerContentHeight;
         if (_isPinnedTitleShown != pinned) {
@@ -45,7 +45,7 @@ class _ExampleNestedScrollViewState extends State<ExampleNestedScrollView>
   }
 
   ScrollController get outerController {
-    return nestedScrollKey.currentState.outerController;
+    return nestedScrollKey.currentState!.outerController;
   }
 
   @override
@@ -169,7 +169,7 @@ class _ExampleNestedScrollViewState extends State<ExampleNestedScrollView>
 class StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar child;
 
-  StickyTabBarDelegate({@required this.child});
+  StickyTabBarDelegate({required this.child});
 
   @override
   Widget build(
