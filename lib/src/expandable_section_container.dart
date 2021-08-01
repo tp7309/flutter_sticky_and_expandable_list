@@ -131,7 +131,7 @@ class RenderExpandableSectionContainer extends RenderBox
     List<int> sectionRealIndexes = const [],
     bool separated = false,
     required RenderExpandableSliverList renderSliver,
-  })   : _scrollable = scrollable,
+  })  : _scrollable = scrollable,
         _controller = controller,
         _sticky = sticky,
         _overlapsContent = overlapsContent,

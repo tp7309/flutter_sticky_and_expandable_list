@@ -27,7 +27,7 @@ class _ExampleSideHeaderState extends State<ExampleSideHeader> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: TitleText("Side Header Example")),
+        appBar: CustomAppBar(title: "Side Header Example"),
         body: ExpandableListView(
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
               overlapsContent: true,

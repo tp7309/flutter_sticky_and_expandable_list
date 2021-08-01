@@ -14,7 +14,7 @@ class _ExampleCustomSectionState extends State<ExampleCustomSection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: TitleText("CustomSection Example")),
+        appBar: CustomAppBar(title: "CustomSection Example"),
         body: ExpandableListView(
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
               sectionList: sectionList,
@@ -77,7 +77,8 @@ class _ExampleCustomSectionState extends State<ExampleCustomSection> {
       ),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemBuilder: containerInfo.childDelegate!.builder as Widget Function(BuildContext, int),
+      itemBuilder: containerInfo.childDelegate!.builder as Widget Function(
+          BuildContext, int),
       itemCount: containerInfo.childDelegate!.childCount,
     );
   }

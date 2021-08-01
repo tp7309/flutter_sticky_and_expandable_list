@@ -32,7 +32,7 @@ class _ExampleNestedScrollViewState extends State<ExampleNestedScrollView>
             _isPinnedTitleShown = pinned;
           });
         }
-        print("outerController position: $outerController $kToolbarHeight");
+        // print("outerController position: $outerController $kToolbarHeight");
       });
     });
   }
@@ -62,7 +62,7 @@ class _ExampleNestedScrollViewState extends State<ExampleNestedScrollView>
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
                   "Appbar top area",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black87),
                 ),
               ),
             ),

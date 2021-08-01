@@ -58,9 +58,7 @@ class _HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: TitleText("Flutter sticky and expandable list"),
-      ),
+      appBar: CustomAppBar(title: "Flutter sticky and expandable list"),
       body: ListView(
         children: <Widget>[
           _Item("ListView Example", RoutePath.listView),

@@ -1,3 +1,6 @@
+## 1.0.1
+- fix example warning.
+
 ## 1.0.0
 - update example to nullsafety version.
 
