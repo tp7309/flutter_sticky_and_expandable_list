@@ -5,7 +5,8 @@ import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 
 class ExampleAnimatableHeader extends StatefulWidget {
   @override
-  _ExampleAnimatableHeaderState createState() => _ExampleAnimatableHeaderState();
+  _ExampleAnimatableHeaderState createState() =>
+      _ExampleAnimatableHeaderState();
 }
 
 class _ExampleAnimatableHeaderState extends State<ExampleAnimatableHeader> {
@@ -26,7 +27,7 @@ class _ExampleAnimatableHeaderState extends State<ExampleAnimatableHeader> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: TitleText("Animatable Header Example")),
+      appBar: CustomAppBar(title: "Animatable Header Example"),
       body: CustomScrollView(
         slivers: <Widget>[
           SliverToBoxAdapter(
@@ -51,7 +52,7 @@ class _ExampleAnimatableHeaderState extends State<ExampleAnimatableHeader> {
                     leading: CircleAvatar(
                       child: Text("$index"),
                     ),
-                    title: TitleText(item),
+                    title: Text(item),
                   );
                 }),
           )
@@ -68,7 +69,7 @@ class _ExampleAnimatableHeaderState extends State<ExampleAnimatableHeader> {
         double opacity = _controller.switchingSectionIndex == sectionIndex
             ? (1 - _controller.percent)
             : 1;
-        String headerText = section.header ?? "";
+        String headerText = section.header;
         if (_controller.switchingSectionIndex == sectionIndex) {
           headerText += " Switching";
         } else if (_controller.stickySectionIndex == sectionIndex) {

@@ -23,8 +23,12 @@ class _ExampleSliverState extends State<ExampleSliver> {
               floating: true,
               expandedHeight: 200,
               flexibleSpace: FlexibleSpaceBar(
-                title: TitleText("Sliver Example"),
+                title: Text(
+                  "Sliver Example",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
+              iconTheme: IconThemeData(color: Colors.white),
             ),
             SliverExpandableList(
               builder: SliverExpandableChildDelegate<String, ExampleSection>(

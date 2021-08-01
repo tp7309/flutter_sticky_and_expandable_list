@@ -36,14 +36,14 @@ class _ExampleNestedListViewState extends State<ExampleNestedListView> {
 
   @override
   void dispose() {
-    _scrollListener?.dispose();
+    _scrollListener.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: TitleText("NestedListView Example")),
+        appBar: CustomAppBar(title: "NestedListView Example"),
         body: ExpandableListView(
           controller: _scrollListener,
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
@@ -52,7 +52,7 @@ class _ExampleNestedListViewState extends State<ExampleNestedListView> {
               itemBuilder: (context, sectionIndex, itemIndex, index) {
                 String item = sectionList[sectionIndex].items[itemIndex];
                 return Container(
-                  color: Colors.orange,
+                  color: Colors.white12,
                   child: ListTile(
                     leading: CircleAvatar(
                       child: Text("$index"),
@@ -106,7 +106,8 @@ class _ExampleNestedListViewState extends State<ExampleNestedListView> {
         onNotification: _onNotification,
         child: ListView.builder(
           physics: AlwaysScrollableScrollPhysics(),
-          itemBuilder: containerInfo.childDelegate!.builder as Widget Function(BuildContext, int),
+          itemBuilder: containerInfo.childDelegate!.builder as Widget Function(
+              BuildContext, int),
           itemCount: containerInfo.childDelegate!.childCount,
         ),
       ),

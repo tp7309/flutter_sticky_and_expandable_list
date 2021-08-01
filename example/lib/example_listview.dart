@@ -22,7 +22,7 @@ class _ExampleListViewState extends State<ExampleListView> {
     //class ExampleSection implements ExpandableListSection<String> {}
     //so: SliverExpandableChildDelegate<String, ExampleSection>()
     return Scaffold(
-        appBar: AppBar(title: TitleText("ListView Example")),
+        appBar: CustomAppBar(title: "ListView Example"),
         body: ExpandableListView(
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
               sectionList: sectionList,

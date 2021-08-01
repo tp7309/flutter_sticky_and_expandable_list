@@ -31,7 +31,7 @@ class _ExampleScrollToIndexState extends State<ExampleScrollToIndex> {
     //class ExampleSection implements ExpandableListSection<String> {}
     //so: SliverExpandableChildDelegate<String, ExampleSection>()
     return Scaffold(
-      appBar: AppBar(title: TitleText("ListView Example")),
+      appBar: CustomAppBar(title: "ListView Example"),
       body: ExpandableListView(
         controller: scrollController,
         builder: SliverExpandableChildDelegate<String, ExampleSection>(

@@ -17,9 +17,7 @@ class _ExampleCustomSectionAnimationState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: TitleText("CustomSectionAnimation Example"),
-        ),
+        appBar: CustomAppBar(title: "CustomSectionAnimation Example"),
         body: ExpandableListView(
           builder: SliverExpandableChildDelegate<String, ExampleSection>(
             sectionList: sectionList,
@@ -127,11 +125,11 @@ class __SectionWidgetState extends State<_SectionWidget>
   void _onTap() {
     widget.section.setSectionExpanded(!widget.section.isSectionExpanded());
     if (widget.section.isSectionExpanded()) {
-      widget?.onStateChanged();
+      widget.onStateChanged();
       _controller.forward();
     } else {
       _controller.reverse().then((_) {
-        widget?.onStateChanged();
+        widget.onStateChanged();
       });
     }
   }
