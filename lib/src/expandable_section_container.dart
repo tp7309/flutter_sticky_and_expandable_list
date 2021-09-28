@@ -167,8 +167,10 @@ class RenderExpandableSectionContainer extends RenderBox
 
     //when collapse last section, Sliver list not callback correct offset, so layout again.
     if (_renderSliver.sizeChanged) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-        markNeedsLayout();
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+        if(attached) {
+          markNeedsLayout();
+        }
       });
     }
     if (_scrollable == value) {
