@@ -168,7 +168,7 @@ class RenderExpandableSectionContainer extends RenderBox
     //when collapse last section, Sliver list not callback correct offset, so layout again.
     if (_renderSliver.sizeChanged) {
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-        if(attached) {
+        if (attached) {
           markNeedsLayout();
         }
       });
@@ -313,12 +313,9 @@ class RenderExpandableSectionContainer extends RenderBox
     //calc content offset
     positionChild(content, Offset(0, headerLogicalExtent));
 
-    double sliverListOffset = _getSliverListVisibleScrollOffset();
-    if (_controller.containerOffsets.length <= _listIndex ||
-        (_listIndex > 0 && _controller.containerOffsets[_listIndex]! <= 0)) {
-      _refreshContainerLayoutOffsets();
-    }
+    checkRefreshContainerOffset();
 
+    double sliverListOffset = _getSliverListVisibleScrollOffset();
     double currContainerOffset = -1;
     if (_listIndex < _controller.containerOffsets.length) {
       currContainerOffset = _controller.containerOffsets[_listIndex]!;
@@ -437,5 +434,22 @@ class RenderExpandableSectionContainer extends RenderBox
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
     return defaultHitTestChildren(result, position: position);
+  }
+
+  void checkRefreshContainerOffset() {
+    int length = _controller.containerOffsets.length;
+    if (_listIndex >= length ||
+        (_listIndex > 0 && _controller.containerOffsets[_listIndex]! <= 0)) {
+      _refreshContainerLayoutOffsets();
+      return;
+    }
+    for (int i = 0; i < _listIndex && _listIndex < length - 1; i++) {
+      double currOffset = _controller.containerOffsets[i]?.toDouble() ?? 0;
+      double nextOffset = _controller.containerOffsets[i + 1]?.toDouble() ?? 0;
+      if (currOffset > nextOffset) {
+        _refreshContainerLayoutOffsets();
+        break;
+      }
+    }
   }
 }
