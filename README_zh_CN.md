@@ -23,7 +23,7 @@
 
 ```yaml
 dependencies:
-  sticky_and_expandable_list: ^1.0.1
+  sticky_and_expandable_list: ^1.0.3
 ```
 
 ## 基础使用示例

@@ -1,3 +1,6 @@
+## 1.0.3
+- [Bugfix]Adding a separatorBuilder to the package's ListView example causes overlapping items #37
+
 ## 1.0.1
 - fix example warning.
 
