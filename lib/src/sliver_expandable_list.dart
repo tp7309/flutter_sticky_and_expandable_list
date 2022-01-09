@@ -132,7 +132,11 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
       bool addAutomaticKeepAlives = true,
       bool addRepaintBoundaries = true,
       bool addSemanticIndexes = true})
-      : assert(headerBuilder == null || sectionBuilder == null),
+      : assert(
+          (headerBuilder != null && sectionBuilder == null) ||
+              (headerBuilder == null && sectionBuilder != null),
+          'You must specify either headerBuilder or sectionBuilder.',
+        ),
         sectionRealIndexes = _buildSectionRealIndexes(sectionList) {
     if (controller == null) {
       controller = ExpandableListController();
