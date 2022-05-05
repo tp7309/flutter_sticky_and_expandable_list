@@ -9,4 +9,5 @@ class RoutePath {
   static const nestedScrollView = "/nestedScrollView";
   static const sideHeader = "/sideHeader";
   static const scrollToIndex = "/scrollToIndex";
+  static const pullToRefresh = "/pullToRefresh";
 }

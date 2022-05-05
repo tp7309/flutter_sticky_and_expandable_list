@@ -16,6 +16,7 @@ README i18n:[中文说明](https://github.com/tp7309/flutter_sticky_and_expandab
 - Support add divider.
 - Support overlap content.
 - Support scroll to index like ListView, by [scroll-to-index](https://github.com/quire-io/scroll-to-index).
+- Pull to refresh and load more, by [pull_to_refresh](https://github.com/peng8350/flutter_pulltorefresh).
 
 ## Getting Started
 

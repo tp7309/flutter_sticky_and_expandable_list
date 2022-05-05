@@ -16,6 +16,8 @@
 - 支持添加分隔线。
 - 支持标题覆盖内容。
 - 支持使用[scroll-to-index](https://github.com/quire-io/scroll-to-index)滚动列表到指定位置。
+- 支持使用[pull_to_refresh](https://github.com/peng8350/flutter_pulltorefresh)之类库进行下拉刷新与加载更多。
+
 
 ## 开始
 
