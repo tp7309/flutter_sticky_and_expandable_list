@@ -35,7 +35,7 @@ class _ExampleCustomSectionAnimationState
               containerInfo: containerInfo,
               onStateChanged: () {
                 //notify ExpandableListView that expand state has changed.
-                WidgetsBinding.instance!.addPostFrameCallback((_) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (mounted) {
                     setState(() {});
                   }

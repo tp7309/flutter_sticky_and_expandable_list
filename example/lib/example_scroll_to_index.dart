@@ -50,10 +50,15 @@ class _ExampleScrollToIndexState extends State<ExampleScrollToIndex> {
               );
             }),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _scrollToIndex,
-        tooltip: 'Increment',
-        child: Text(counter.toString()),
+      floatingActionButton: InkWell(
+        onTap: _scrollToIndex,
+        child: Container(
+          height: 48,
+          padding: EdgeInsets.all(10),
+          alignment: Alignment.center,
+          color: Colors.blueGrey,
+          child: Text("Click Me: ${counter.toString()}", style: TextStyle(color: Colors.white),),
+        ),
       ),
     );
   }

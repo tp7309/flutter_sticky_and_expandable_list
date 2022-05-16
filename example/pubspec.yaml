@@ -26,7 +26,7 @@ dependencies:
 #  cupertino_icons: ^0.1.2
   sticky_and_expandable_list:
     path: ../
-  scroll_to_index: any
+  scroll_to_index: ^3.0.0
   pull_to_refresh: ^2.0.0
 
 dev_dependencies:

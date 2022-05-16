@@ -24,7 +24,7 @@ class _ExampleNestedScrollViewState extends State<ExampleNestedScrollView>
     this.tabController = TabController(length: 2, vsync: this);
     this.subTabController = TabController(length: 2, vsync: this);
     var headerContentHeight = _expandedHeight - kToolbarHeight;
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       outerController.addListener(() {
         var pinned = outerController.offset >= headerContentHeight;
         if (_isPinnedTitleShown != pinned) {

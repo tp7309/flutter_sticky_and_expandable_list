@@ -23,6 +23,8 @@ class _ExamplePullToRefreshState extends State<ExamplePullToRefresh> {
   void _onRefresh() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
+    sectionList = MockData.getExampleSections(5, 3);
+    if (mounted) setState(() {});
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
