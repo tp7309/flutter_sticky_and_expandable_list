@@ -2,7 +2,6 @@ import 'package:example/mock_data.dart';
 import 'package:example/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 import 'package:example/example_custom_section.dart';
 
@@ -119,7 +118,7 @@ class _ExampleNestedListViewState extends State<ExampleNestedListView> {
     if (notification is ScrollEndNotification) {
       drag = null;
     }
-    if (metrics.axis == Axis.horizontal || _scrollListener == null) {
+    if (metrics.axis == Axis.horizontal) {
       return true;
     }
     if (notification is ScrollStartNotification) {

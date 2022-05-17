@@ -1,4 +1,3 @@
-import 'package:example/example_listview.dart';
 import 'package:example/mock_data.dart';
 import 'package:example/widgets.dart';
 import 'package:flutter/cupertino.dart';

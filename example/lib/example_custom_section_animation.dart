@@ -55,8 +55,7 @@ class _SectionWidget extends StatefulWidget {
   _SectionWidget(
       {required this.section,
       required this.containerInfo,
-      required this.onStateChanged})
-      : assert(onStateChanged != null);
+      required this.onStateChanged});
 
   @override
   __SectionWidgetState createState() => __SectionWidgetState();
