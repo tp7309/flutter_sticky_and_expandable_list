@@ -1,4 +1,4 @@
-## 1.1.1
+## 1.1.2
 - [BugFix]sticky header not work when section's item is less.#45
 
 ## 1.1.0
