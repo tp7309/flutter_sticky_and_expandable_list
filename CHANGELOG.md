@@ -1,3 +1,6 @@
+## 1.1.1
+- [BugFix]sticky header not work when section's item is less.#45
+
 ## 1.1.0
 - migrate to flutter 3.0.0.
 

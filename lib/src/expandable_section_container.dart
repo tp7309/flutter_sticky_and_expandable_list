@@ -108,6 +108,7 @@ class RenderExpandableSectionContainer extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
+  static const String TAG = "ExpandableSectionContainer";
   bool _sticky;
   bool _overlapsContent;
   ScrollableState _scrollable;
@@ -163,12 +164,13 @@ class RenderExpandableSectionContainer extends RenderBox
   ScrollableState get scrollable => _scrollable;
 
   set scrollable(ScrollableState value) {
-    // print("$runtimeType  update scrollable: ${_renderSliver.sizeChanged}");
+    // print("$TAG  update scrollable: ${_renderSliver.sizeChanged}");
 
     //when collapse last section, Sliver list not callback correct offset, so layout again.
     if (_renderSliver.sizeChanged) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (attached) {
+          clearContainerLayoutOffsets();
           markNeedsLayout();
         }
       });
@@ -365,10 +367,10 @@ class RenderExpandableSectionContainer extends RenderBox
     if (_sticky && isStickyChild && sliverListOffset > minScrollOffset) {
       currHeaderOffset = sliverListOffset - minScrollOffset;
     }
-//    print(
-//        "index:$listIndex currHeaderOffset:${currHeaderOffset.toStringAsFixed(2)}" +
-//            " sliverListOffset:${sliverListOffset.toStringAsFixed(2)}" +
-//            " [$minScrollOffset,$maxScrollOffset] size:${content.size.height}");
+   // print(
+   //     "index:$listIndex currHeaderOffset:${currHeaderOffset.toStringAsFixed(2)}" +
+   //         " sliverListOffset:${sliverListOffset.toStringAsFixed(2)}" +
+   //         " [$minScrollOffset,$maxScrollOffset] size:${content.size.height}");
     positionChild(header, Offset(0, min(currHeaderOffset, headerMaxOffset)));
 
     //callback header hide percent
@@ -394,11 +396,17 @@ class RenderExpandableSectionContainer extends RenderBox
         _renderSliver.constraints.scrollOffset;
   }
 
-  void _refreshContainerLayoutOffsets() {
+  void clearContainerLayoutOffsets() {
+    print("$TAG clearContainerLayoutOffsets");
+    _controller.containerOffsets.clear();
+  }
+
+  void _refreshContainerLayoutOffsets(String reason) {
+    print("$TAG _refreshContainerLayoutOffsets reason:$reason");
     _renderSliver.visitChildren((renderObject) {
       var containerParentData =
           renderObject.parentData as SliverMultiBoxAdaptorParentData;
-//      print("visitChildren $containerParentData");
+     // print("visitChildren $containerParentData");
 
       while (
           _controller.containerOffsets.length <= containerParentData.index!) {
@@ -440,14 +448,14 @@ class RenderExpandableSectionContainer extends RenderBox
     int length = _controller.containerOffsets.length;
     if (_listIndex >= length ||
         (_listIndex > 0 && _controller.containerOffsets[_listIndex]! <= 0)) {
-      _refreshContainerLayoutOffsets();
+      _refreshContainerLayoutOffsets("zero size");
       return;
     }
     for (int i = 0; i < _listIndex && _listIndex < length - 1; i++) {
       double currOffset = _controller.containerOffsets[i]?.toDouble() ?? 0;
       double nextOffset = _controller.containerOffsets[i + 1]?.toDouble() ?? 0;
       if (currOffset > nextOffset) {
-        _refreshContainerLayoutOffsets();
+        _refreshContainerLayoutOffsets("offset invalid: $currOffset->$nextOffset");
         break;
       }
     }
