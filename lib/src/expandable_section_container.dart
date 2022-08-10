@@ -397,12 +397,12 @@ class RenderExpandableSectionContainer extends RenderBox
   }
 
   void clearContainerLayoutOffsets() {
-    print("$TAG clearContainerLayoutOffsets");
+    // print("$TAG clearContainerLayoutOffsets");
     _controller.containerOffsets.clear();
   }
 
   void _refreshContainerLayoutOffsets(String reason) {
-    print("$TAG _refreshContainerLayoutOffsets reason:$reason");
+    // print("$TAG _refreshContainerLayoutOffsets reason:$reason");
     _renderSliver.visitChildren((renderObject) {
       var containerParentData =
           renderObject.parentData as SliverMultiBoxAdaptorParentData;
