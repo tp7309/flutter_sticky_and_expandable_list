@@ -1,0 +1,2 @@
+# 正式发布，国内用户应该都有使用flutter提供的中国镜像，所以上传时要指明上传到https://pub.dartlang.org地址。
+flutter packages pub publish --server=https://pub.dartlang.org
